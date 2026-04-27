@@ -24,9 +24,7 @@ print -r -- "$HOME"
             (word))
           (word)
           (word)
-          (double_quoted_string
-            (variable_expansion
-              (variable_name))))))))
+          (double_quoted_string))))))
 
 ==================
 Assignments
@@ -67,6 +65,24 @@ export EDITOR=vim
             (word)))))))
 
 ==================
+Tranche 5 alias assignment-style argument
+==================
+
+alias opencode-tmux=opencode-free-port
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word))))))
+
+==================
 Strings and comments
 ==================
 
@@ -84,9 +100,7 @@ echo done # inline comment
         (simple_command
           (command_name
             (word))
-          (double_quoted_string
-            (variable_expansion
-              (variable_name)))
+          (double_quoted_string)
           (single_quoted_string)))))
   (terminated_statement
     (comment))
@@ -196,6 +210,271 @@ exec 3>&1
       (pipeline
         (simple_command
           (precommand)
+          (redirect
+            (redirect_operator)
+            (word)))))))
+
+==================
+Digit command words and trailing background
+==================
+
+exit 0
+return 1
+echo 1
+builtin fc -rl 1 | formatfc
+MD5SUM=$(md5sum $1 | choose 0)
+cmd 2> /dev/null &
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (precommand)
+          (command_name
+            (word))
+          (word)
+          (word))
+        (simple_command
+          (command_name
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            name: (variable_name)
+            (command_substitution
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (variable_expansion))
+                  (simple_command
+                    (command_name
+                      (word))
+                    (word))))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (redirect
+            (redirect_operator)
+            (word)))))
+    (list_operator)))
+
+==================
+Tranche 2 option words and attached here-string
+==================
+
+git log --pretty=format:%h HEAD
+flatpak run --app-url=https://outlook.cloud.microsoft/mail/ &
+hexdump-rs --color=always -C -v -n $DIFF_MAX $1 >> $TMP_FILE
+git log --color=always --stat $HASH^! -- 2> /dev/null
+grep -q "(\s*true" <<<"$WAYLAND_LOWER_OUTPUT"
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)
+          (option_word)
+          (word)))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)
+          (option_word))))
+    (list_operator))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (option_word)
+          (word)
+          (word)
+          (word)
+          (variable_expansion
+            (variable_name))
+          (variable_expansion)
+          (redirect
+            (redirect_operator)
+            (variable_expansion
+              (variable_name)))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)
+          (option_word)
+          (word)
+          (variable_expansion
+            (variable_name))
+          (word)
+          (word)
+          (redirect
+            (redirect_operator)
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)
+          (double_quoted_string
+            (escape_sequence))
+          (redirect
+            (redirect_operator)
+            (double_quoted_string)))))))
+
+==================
+Process substitution redirect input
+==================
+
+IFS=: read -ra selected < <(rg --glob '!**/.git/*' --smart-case "${*:-}" | cat)
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            (variable_name)
+            (word))
+          (command_name
+            (word))
+          (word)
+          (word)
+          (redirect
+            (redirect_operator)
+            (process_substitution
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (word))))
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (single_quoted_string))
+                    (word))))
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (double_quoted_string
+                        (parameter_expansion
+                          (special_parameter)
+                          (parameter_operator)))))
+                  (simple_command
+                    (command_name
+                      (word))))))))))))
+
+==================
+Tranche 4 heredoc command substitution and escaped command parts
+==================
+
+port=$(python - <<'PY'
+print(1)
+PY
+)
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+cp ~/Library/Application\ Support/zoxide/db.zo $DBZO_BAK_FILE 2> /dev/null
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            name: (variable_name)
+            (command_substitution
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (word))))
+              (redirect
+                (redirect_operator)
+                (heredoc_start))
+              (heredoc_body
+                (heredoc_content)
+                (heredoc_end))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (test_command
+          (conditional_expression
+            (test_unary_expression
+              (test_operator)
+              (double_quoted_string)))))
+      (list_operator)
+      (pipeline
+        (simple_command
+          (command_name
+            (escape_sequence))
+          (double_quoted_string)))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)
+          (escape_sequence)
+          (word)
+          (variable_expansion
+            (variable_name))
           (redirect
             (redirect_operator)
             (word)))))))

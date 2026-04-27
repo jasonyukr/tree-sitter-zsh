@@ -179,6 +179,146 @@ print ${${nested:-fallback}#fall}
             (word)))))))
 
 ==================
+Tranche 5 flag-only parameter expansions
+==================
+
+set -- ${(s: :)line}
+echo "${${(%):-%N}:A:h}/move_focus_to_any_prev_window.sh"
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)
+          (parameter_expansion
+            (parameter_flags)
+            (variable_name))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (double_quoted_string
+            (parameter_expansion
+              parameter: (parameter_expansion
+                (parameter_flags)
+                (parameter_operator)
+                (word))
+              (parameter_slice
+                (word)
+                (word)))))))))
+
+==================
+Special parameter substitution and array assignment
+==================
+
+echo ${@/\/\\}
+ARR1=(M_ A_ D_)
+local FPATH=${(Q)1}
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            parameter: (special_parameter)
+            (parameter_substitution
+              (escape_sequence)
+              (escape_sequence)))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            name: (variable_name)
+            (array_assignment
+              (word)
+              (word)
+              (word)))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (assignment
+            name: (variable_name)
+            (parameter_expansion
+              (parameter_flags)
+              (special_parameter))))))))
+
+==================
+Tranche 4 parameter subscripts and escaped parameter parts
+==================
+
+OLD_SELF_INSERT=${${(s.:.)widgets[self-insert]}[2,3]}
+ZSH_HIGHLIGHT_STYLES[comment]=none
+active_out="${active_out#*\'}"
+windows_out=${windows_out//\\n/$'\n'}
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            name: (variable_name)
+            (parameter_expansion
+              parameter: (parameter_expansion
+                (parameter_flags)
+                (variable_name)
+                (parameter_subscript))
+              (parameter_subscript)))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            name: (variable_name)
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            name: (variable_name)
+            (double_quoted_string
+              (parameter_expansion
+                parameter: (variable_name)
+                (parameter_operator)
+                (word)
+                (escape_sequence))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            name: (variable_name)
+            (parameter_expansion
+              parameter: (variable_name)
+              (parameter_substitution
+                (escape_sequence)
+                (word)
+                (ansi_c_string
+                  (escape_sequence))))))))))
+
+==================
 Option and emulation command forms
 ==================
 

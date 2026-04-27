@@ -76,6 +76,729 @@ done
                     (variable_name)))))))))))
 
 ==================
+For statement with brace range word
+==================
+
+for i in {1..40}; do echo $i; done
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (for_statement
+          (variable_name)
+          (word)
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (variable_expansion
+                    (variable_name)))))))))))
+
+==================
+Tranche 2 arithmetic and conditional negation
+==================
+
+if (($ARR1[(Ie)$MODE])); then echo ok; fi
+if [ ! "$?" = '0' ]; then echo no; fi
+if [[ ! $FPATH == *:* ]]; then echo ok; fi
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (if_statement
+          (terminated_statement
+            (list
+              (pipeline
+                (arithmetic_command
+                  (arithmetic_expression)))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (if_statement
+          (terminated_statement
+            (list
+              (pipeline
+                (test_command
+                  (conditional_expression
+                    (test_negated_expression
+                      (bang)
+                      (test_binary_expression
+                        (double_quoted_string)
+                        (test_operator)
+                        (single_quoted_string))))))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (if_statement
+          (terminated_statement
+            (list
+              (pipeline
+                (conditional_command
+                  (conditional_expression
+                    (test_negated_expression
+                      (bang)
+                      (test_binary_expression
+                        (variable_expansion
+                          (variable_name))
+                        (test_operator)
+                        (word))))))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word))))))))))
+
+==================
+Tranche 3 conditional operands and case patterns
+==================
+
+if [[ "$VAL" = \/* ]]; then echo ok; fi
+if [[ $FPATH =~ ".tar.gz$" ]]; then echo ok; fi
+if [[ "$MIME_1" = *text\/* ]] || [[ "$MIME_1" = *json* ]]; then echo ok; fi
+if [ -f ${CACHE_FILE}.done ]; then echo ok; fi
+if [ -f $TMP_PATHFILE.all ]; then echo ok; fi
+case "$launcher" in *"/opt/kitty/linux-package/bin/kitty"*|kitty|kitty\ *) print ok ;; esac
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (if_statement
+          (terminated_statement
+            (list
+              (pipeline
+                (conditional_command
+                  (conditional_expression
+                    (test_binary_expression
+                      (double_quoted_string)
+                      (test_operator)
+                      (word)))))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (if_statement
+          (terminated_statement
+            (list
+              (pipeline
+                (conditional_command
+                  (conditional_expression
+                    (test_binary_expression
+                      (variable_expansion
+                        (variable_name))
+                      (test_operator)
+                      (double_quoted_string)))))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (if_statement
+          (terminated_statement
+            (list
+              (pipeline
+                (conditional_command
+                  (conditional_expression
+                    (test_binary_expression
+                      (double_quoted_string)
+                      (test_operator)
+                      (word)))))
+              (list_operator)
+              (pipeline
+                (conditional_command
+                  (conditional_expression
+                    (test_binary_expression
+                      (double_quoted_string)
+                      (test_operator)
+                      (word)))))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (if_statement
+          (terminated_statement
+            (list
+              (pipeline
+                (test_command
+                  (conditional_expression
+                    (test_unary_expression
+                      (test_operator)
+                      (compound_word
+                        (parameter_expansion
+                          (variable_name))
+                        (word))))))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (if_statement
+          (terminated_statement
+            (list
+              (pipeline
+                (test_command
+                  (conditional_expression
+                    (test_unary_expression
+                      (test_operator)
+                      (compound_word
+                        (variable_expansion
+                          (variable_name))
+                        (word))))))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (case_statement
+          (double_quoted_string)
+          (case_pattern
+            (case_pattern_word
+              (word)
+              (double_quoted_string)
+              (word))
+            (case_pattern_word
+              (word))
+            (case_pattern_word
+              (word)
+              (escape_sequence)
+              (word)))
+          (list
+            (pipeline
+              (simple_command
+                (command_name
+                  (word))
+                (word)))))))))
+
+==================
+Tranche 5 conditional quoted glob operands
+==================
+
+if [[ "$launcher" != *"/opt/bin/wezterm"* ]] && [[ "$launcher" != *"/opt/kitty/linux-package/bin/kitty"* ]]; then return 0; fi
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (if_statement
+          (terminated_statement
+            (list
+              (pipeline
+                (conditional_command
+                  (conditional_expression
+                    (test_binary_expression
+                      (double_quoted_string)
+                      (test_operator)
+                      (word)))))
+              (list_operator)
+              (pipeline
+                (conditional_command
+                  (conditional_expression
+                    (test_binary_expression
+                      (double_quoted_string)
+                      (test_operator)
+                      (word)))))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word))))))))))
+
+==================
+Tranche 5 background disown terminator
+==================
+
+(git rev-list --abbrev-commit --all --children > ${CACHE_FILE}.populate; LC_ALL=C sort ${CACHE_FILE}.populate --output=${CACHE_FILE} 2> /dev/null && (touch ${CACHE_FILE}.done; rm -f ${CACHE_FILE}.populate); 2> /dev/null;)&!
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (subshell
+          (list
+            (pipeline
+              (simple_command
+                (command_name
+                  (word))
+                (word))))
+          (list
+            (pipeline
+              (simple_command
+                (command_name
+                  (word))
+                (word))))
+          (list
+            (pipeline
+              (simple_command
+                (command_name
+                  (word))
+                (redirect
+                  (redirect_operator)
+                  (parameter_expansion
+                    (variable_name))))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))))))
+          (list
+            (pipeline
+              (simple_command
+                (assignment
+                  name: (variable_name)
+                  (word)))))
+          (list
+            (pipeline
+              (simple_command
+                (command_name
+                  (word))
+                (parameter_expansion
+                  (variable_name)))))
+          (list
+            (pipeline
+              (simple_command
+                (command_name
+                  (word))
+                (option_word))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (parameter_expansion
+                      (variable_name)))
+                  (redirect
+                    (redirect_operator)
+                    (word))))
+              (list_operator)
+              (pipeline
+                (subshell
+                  (list
+                    (pipeline
+                      (simple_command
+                        (command_name
+                          (word))
+                        (parameter_expansion
+                          (variable_name)))))
+                  (terminated_statement
+                    (list
+                      (pipeline
+                        (simple_command
+                          (command_name
+                            (word))))))
+                  (list
+                    (pipeline
+                      (simple_command
+                        (command_name
+                          (word))
+                        (word))))
+                  (list
+                    (pipeline
+                      (simple_command
+                        (command_name
+                          (parameter_expansion
+                            (variable_name)))
+                        (word))))))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (redirect
+                    (redirect_operator)
+                    (word)))))))))
+    (list_operator)))
+
+==================
+Tranche 4 heredoc if condition and parameter subscript loop
+==================
+
+if python3 - "$ACTIVE_WINDOW_ID" <<'PY'
+print(1)
+PY
+then echo ok; fi
+for _dir in "${DIRS[@]}"; do echo $_dir; done
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (if_statement
+          (list
+            (pipeline
+              (simple_command
+                (command_name
+                  (word))
+                (word))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (double_quoted_string))
+                  (redirect
+                    (redirect_operator)
+                    (heredoc_start)))))
+            (heredoc_body
+              (heredoc_content)
+              (heredoc_end)))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (for_statement
+          variable: (variable_name)
+          (double_quoted_string
+            (parameter_expansion
+              (variable_name)
+              (parameter_subscript)))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (variable_expansion
+                    (variable_name)))))))))))
+
+==================
+Tranche 6 parser hardening
+==================
+
+local ZIP="${TGT%/}.zip"
+COMMAND_STRING="${COMMAND_STRING%&}"
+list+=("${preferred_present_ids[$APP_ID]:-$WINDOW_ID}")
+if [[ "$ADDV" == <-> ]]; then echo ok; fi
+if [[ "$PWD" == "/home/jinhyu/project/AI"* ]]; then echo ok; fi
+case "$arg" in
+  "--strip")
+    shift # Consume "--strip"
+    strip_value="$1" # Store the value
+    shift # Consume the value
+    ;;
+esac
+echo $PARENTS | tr ' ' '\n' |
+  while read line; do echo ok; done
+IFS=: read -ra selected < <(
+  rg --smart-case "${*:-}" |
+    fzf --ansi \
+        --height 90%
+)
+{
+  echo ok
+} >| "$REP_STATE_TMP" && mv "$REP_STATE_TMP" "$REP_STATE_FILE"
+PORT=$((47000 + (RANDOM % 10000)))
+rg -v "/ $" 2> /dev/null | lscolors
+dim=${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}}
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (assignment
+            (variable_name)
+            (double_quoted_string
+              (parameter_expansion
+                (variable_name)
+                (parameter_operator)
+                (word))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            (variable_name)
+            (double_quoted_string
+              (parameter_expansion
+                (variable_name)
+                (parameter_operator)
+                (word))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            (variable_name)
+            (array_assignment
+              (double_quoted_string
+                (parameter_expansion
+                  (variable_name)
+                  (parameter_subscript)
+                  (parameter_operator)
+                  (variable_expansion
+                    (variable_name))))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (if_statement
+          (terminated_statement
+            (list
+              (pipeline
+                (conditional_command
+                  (conditional_expression
+                    (test_binary_expression
+                      (double_quoted_string)
+                      (test_operator)
+                      (word)))))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (if_statement
+          (terminated_statement
+            (list
+              (pipeline
+                (conditional_command
+                  (conditional_expression
+                    (test_binary_expression
+                      (double_quoted_string)
+                      (test_operator)
+                      (word)))))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (case_statement
+          (double_quoted_string)
+          (case_item
+            (case_pattern
+              (case_pattern_word
+                (double_quoted_string)))
+            (terminated_statement)
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word)))))
+            (comment)
+            (terminated_statement)
+            (list
+              (pipeline
+                (simple_command
+                  (assignment
+                    (variable_name)
+                    (double_quoted_string)))))
+            (comment)
+            (terminated_statement)
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word)))))
+            (comment)
+            (terminated_statement))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (variable_expansion
+            (variable_name)))
+        (simple_command
+          (command_name
+            (word))
+          (single_quoted_string)
+          (single_quoted_string))
+        (while_statement
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            (variable_name)
+            (word))
+          (command_name
+            (word))
+          (word)
+          (word)
+          (redirect
+            (redirect_operator)
+            (process_substitution
+              (terminated_statement)
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (word))))
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (double_quoted_string
+                        (parameter_expansion
+                          (special_parameter)
+                          (parameter_operator)))))
+                  (simple_command
+                    (command_name
+                      (word))
+                    (word))))
+              (line_continuation)
+              (terminated_statement
+                (list
+                  (pipeline
+                    (simple_command
+                      (command_name
+                        (word))
+                      (word)))))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (block
+          (terminated_statement)
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word))))))
+        (redirect
+          (redirect_operator)
+          (double_quoted_string)))
+      (list_operator)
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (double_quoted_string)
+          (double_quoted_string)))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            (variable_name)
+            (arithmetic_expansion
+              (arithmetic_expression)))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)
+          (double_quoted_string)
+          (redirect
+            (redirect_operator)
+            (word)))
+        (simple_command
+          (command_name
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            (variable_name)
+            (word)))))))
+
+==================
 While statement
 ==================
 
@@ -158,7 +881,8 @@ esac
             (variable_name))
           (case_item
             (case_pattern
-              (word))
+              (case_pattern_word
+                (word)))
             (list
               (pipeline
                 (simple_command
@@ -167,8 +891,10 @@ esac
                   (word)))))
           (case_item
             (case_pattern
-              (word)
-              (word))
+              (case_pattern_word
+                (word))
+              (case_pattern_word
+                (word)))
             (list
               (pipeline
                 (simple_command
@@ -207,12 +933,11 @@ esac
     (list
       (pipeline
         (case_statement
-          (double_quoted_string
-            (variable_expansion
-              (variable_name)))
+          (double_quoted_string)
           (case_item
             (case_pattern
-              (word))
+              (case_pattern_word
+                (word)))
             (terminated_statement)
             (list
               (pipeline
@@ -226,8 +951,8 @@ esac
           (comment)
           (case_item
             (case_pattern
-              (glob_pattern
-                pattern: (word)))
+              (case_pattern_word
+                (word)))
             (terminated_statement)
             (terminated_statement
               (list
@@ -240,9 +965,7 @@ esac
                             (conditional_expression
                               (test_unary_expression
                                 (test_operator)
-                                (double_quoted_string
-                                  (variable_expansion
-                                    (variable_name)))))))))
+                                (double_quoted_string)))))))
                     (terminated_statement)
                     (terminated_statement
                       (list
@@ -258,11 +981,9 @@ esac
                             (test_command
                               (conditional_expression
                                 (test_binary_expression
-                                  (double_quoted_string
-                                    (variable_expansion
-                                      (variable_name)))
+                                  (double_quoted_string)
                                   (test_operator)
-                                  (double_quoted_string)))))))
+                                  (word)))))))
                       (terminated_statement)
                       (terminated_statement
                         (list
@@ -279,9 +1000,7 @@ esac
                             (simple_command
                               (assignment
                                 name: (variable_name)
-                                (double_quoted_string
-                                  (variable_expansion
-                                    (variable_name)))))))))))))))))))
+                                (double_quoted_string)))))))))))))))))
 
 ==================
 Select statement
