@@ -703,6 +703,10 @@
           "named": true
         },
         {
+          "type": "block",
+          "named": true
+        },
+        {
           "type": "c_style_for_clause",
           "named": true
         },
@@ -896,6 +900,10 @@
         },
         {
           "type": "redirect",
+          "named": true
+        },
+        {
+          "type": "simple_command",
           "named": true
         },
         {
@@ -1487,6 +1495,10 @@
           "named": true
         },
         {
+          "type": "block",
+          "named": true
+        },
+        {
           "type": "command_substitution",
           "named": true
         },
@@ -1925,6 +1937,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "block",
+          "named": true
+        },
         {
           "type": "list",
           "named": true
