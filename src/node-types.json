@@ -15,6 +15,36 @@
     }
   },
   {
+    "type": "arithmetic_command",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "arithmetic_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "arithmetic_expansion",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "arithmetic_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "assignment",
     "named": true,
     "fields": {
@@ -38,11 +68,19 @@
           "named": true
         },
         {
+          "type": "arithmetic_expansion",
+          "named": true
+        },
+        {
           "type": "command_substitution",
           "named": true
         },
         {
           "type": "double_quoted_string",
+          "named": true
+        },
+        {
+          "type": "glob_pattern",
           "named": true
         },
         {
@@ -88,6 +126,21 @@
     }
   },
   {
+    "type": "c_style_for_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "arithmetic_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "case_item",
     "named": true,
     "fields": {},
@@ -123,11 +176,19 @@
           "named": true
         },
         {
+          "type": "arithmetic_expansion",
+          "named": true
+        },
+        {
           "type": "command_substitution",
           "named": true
         },
         {
           "type": "double_quoted_string",
+          "named": true
+        },
+        {
+          "type": "glob_pattern",
           "named": true
         },
         {
@@ -166,6 +227,10 @@
           "named": true
         },
         {
+          "type": "arithmetic_expansion",
+          "named": true
+        },
+        {
           "type": "case_item",
           "named": true
         },
@@ -175,6 +240,10 @@
         },
         {
           "type": "double_quoted_string",
+          "named": true
+        },
+        {
+          "type": "glob_pattern",
           "named": true
         },
         {
@@ -213,11 +282,19 @@
           "named": true
         },
         {
+          "type": "arithmetic_expansion",
+          "named": true
+        },
+        {
           "type": "command_substitution",
           "named": true
         },
         {
           "type": "double_quoted_string",
+          "named": true
+        },
+        {
+          "type": "glob_pattern",
           "named": true
         },
         {
@@ -267,6 +344,104 @@
     }
   },
   {
+    "type": "conditional_command",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "conditional_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "conditional_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "ansi_c_string",
+          "named": true
+        },
+        {
+          "type": "arithmetic_expansion",
+          "named": true
+        },
+        {
+          "type": "command_substitution",
+          "named": true
+        },
+        {
+          "type": "conditional_group",
+          "named": true
+        },
+        {
+          "type": "conditional_operator",
+          "named": true
+        },
+        {
+          "type": "double_quoted_string",
+          "named": true
+        },
+        {
+          "type": "glob_pattern",
+          "named": true
+        },
+        {
+          "type": "parameter_expansion",
+          "named": true
+        },
+        {
+          "type": "single_quoted_string",
+          "named": true
+        },
+        {
+          "type": "test_binary_expression",
+          "named": true
+        },
+        {
+          "type": "test_unary_expression",
+          "named": true
+        },
+        {
+          "type": "variable_expansion",
+          "named": true
+        },
+        {
+          "type": "word",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "conditional_group",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "conditional_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "conditional_operator",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "double_quoted_string",
     "named": true,
     "fields": {},
@@ -274,6 +449,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "arithmetic_expansion",
+          "named": true
+        },
         {
           "type": "command_substitution",
           "named": true
@@ -337,7 +516,7 @@
     "fields": {
       "variable": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "variable_name",
@@ -355,11 +534,23 @@
           "named": true
         },
         {
+          "type": "arithmetic_expansion",
+          "named": true
+        },
+        {
+          "type": "c_style_for_clause",
+          "named": true
+        },
+        {
           "type": "command_substitution",
           "named": true
         },
         {
           "type": "double_quoted_string",
+          "named": true
+        },
+        {
+          "type": "glob_pattern",
           "named": true
         },
         {
@@ -417,11 +608,19 @@
           "named": true
         },
         {
+          "type": "arithmetic_expansion",
+          "named": true
+        },
+        {
           "type": "command_substitution",
           "named": true
         },
         {
           "type": "double_quoted_string",
+          "named": true
+        },
+        {
+          "type": "glob_pattern",
           "named": true
         },
         {
@@ -486,6 +685,51 @@
     }
   },
   {
+    "type": "glob_pattern",
+    "named": true,
+    "fields": {
+      "pattern": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "word",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "glob_qualifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "heredoc_body",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "heredoc_content",
+          "named": true
+        },
+        {
+          "type": "heredoc_end",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "if_statement",
     "named": true,
     "fields": {},
@@ -539,13 +783,40 @@
   {
     "type": "parameter_expansion",
     "named": true,
-    "fields": {},
+    "fields": {
+      "parameter": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "command_substitution",
+            "named": true
+          },
+          {
+            "type": "parameter_expansion",
+            "named": true
+          },
+          {
+            "type": "variable_name",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": false,
       "types": [
         {
+          "type": "arithmetic_expansion",
+          "named": true
+        },
+        {
           "type": "command_substitution",
+          "named": true
+        },
+        {
+          "type": "parameter_expansion",
           "named": true
         },
         {
@@ -553,7 +824,27 @@
           "named": true
         },
         {
+          "type": "parameter_operator",
+          "named": true
+        },
+        {
+          "type": "parameter_slice",
+          "named": true
+        },
+        {
+          "type": "parameter_substitution",
+          "named": true
+        },
+        {
+          "type": "variable_expansion",
+          "named": true
+        },
+        {
           "type": "variable_name",
+          "named": true
+        },
+        {
+          "type": "word",
           "named": true
         }
       ]
@@ -565,6 +856,48 @@
     "fields": {}
   },
   {
+    "type": "parameter_slice",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "word",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "parameter_substitution",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "command_substitution",
+          "named": true
+        },
+        {
+          "type": "parameter_expansion",
+          "named": true
+        },
+        {
+          "type": "variable_expansion",
+          "named": true
+        },
+        {
+          "type": "word",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "pipeline",
     "named": true,
     "fields": {},
@@ -572,6 +905,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "arithmetic_command",
+          "named": true
+        },
         {
           "type": "bang",
           "named": true
@@ -582,6 +919,10 @@
         },
         {
           "type": "case_statement",
+          "named": true
+        },
+        {
+          "type": "conditional_command",
           "named": true
         },
         {
@@ -664,11 +1005,23 @@
           "named": true
         },
         {
+          "type": "arithmetic_expansion",
+          "named": true
+        },
+        {
           "type": "command_substitution",
           "named": true
         },
         {
           "type": "double_quoted_string",
+          "named": true
+        },
+        {
+          "type": "glob_pattern",
+          "named": true
+        },
+        {
+          "type": "heredoc_start",
           "named": true
         },
         {
@@ -711,6 +1064,14 @@
           "named": true
         },
         {
+          "type": "arithmetic_command",
+          "named": true
+        },
+        {
+          "type": "arithmetic_expansion",
+          "named": true
+        },
+        {
           "type": "block",
           "named": true
         },
@@ -720,6 +1081,10 @@
         },
         {
           "type": "command_substitution",
+          "named": true
+        },
+        {
+          "type": "conditional_command",
           "named": true
         },
         {
@@ -736,6 +1101,10 @@
         },
         {
           "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "glob_pattern",
           "named": true
         },
         {
@@ -821,11 +1190,19 @@
           "named": true
         },
         {
+          "type": "arithmetic_expansion",
+          "named": true
+        },
+        {
           "type": "command_substitution",
           "named": true
         },
         {
           "type": "double_quoted_string",
+          "named": true
+        },
+        {
+          "type": "glob_pattern",
           "named": true
         },
         {
@@ -872,6 +1249,10 @@
           "named": true
         },
         {
+          "type": "arithmetic_expansion",
+          "named": true
+        },
+        {
           "type": "assignment",
           "named": true
         },
@@ -885,6 +1266,10 @@
         },
         {
           "type": "double_quoted_string",
+          "named": true
+        },
+        {
+          "type": "glob_pattern",
           "named": true
         },
         {
@@ -975,7 +1360,113 @@
           "named": true
         },
         {
+          "type": "heredoc_body",
+          "named": true
+        },
+        {
           "type": "list",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "test_binary_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "ansi_c_string",
+          "named": true
+        },
+        {
+          "type": "arithmetic_expansion",
+          "named": true
+        },
+        {
+          "type": "command_substitution",
+          "named": true
+        },
+        {
+          "type": "double_quoted_string",
+          "named": true
+        },
+        {
+          "type": "glob_pattern",
+          "named": true
+        },
+        {
+          "type": "parameter_expansion",
+          "named": true
+        },
+        {
+          "type": "single_quoted_string",
+          "named": true
+        },
+        {
+          "type": "test_operator",
+          "named": true
+        },
+        {
+          "type": "variable_expansion",
+          "named": true
+        },
+        {
+          "type": "word",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "test_unary_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "ansi_c_string",
+          "named": true
+        },
+        {
+          "type": "arithmetic_expansion",
+          "named": true
+        },
+        {
+          "type": "command_substitution",
+          "named": true
+        },
+        {
+          "type": "double_quoted_string",
+          "named": true
+        },
+        {
+          "type": "glob_pattern",
+          "named": true
+        },
+        {
+          "type": "parameter_expansion",
+          "named": true
+        },
+        {
+          "type": "single_quoted_string",
+          "named": true
+        },
+        {
+          "type": "test_operator",
+          "named": true
+        },
+        {
+          "type": "variable_expansion",
+          "named": true
+        },
+        {
+          "type": "word",
           "named": true
         }
       ]
@@ -1051,6 +1542,14 @@
     "named": false
   },
   {
+    "type": "$((",
+    "named": false
+  },
+  {
+    "type": "$[",
+    "named": false
+  },
+  {
     "type": "${",
     "named": false
   },
@@ -1071,11 +1570,27 @@
     "named": false
   },
   {
+    "type": "((",
+    "named": false
+  },
+  {
     "type": ")",
     "named": false
   },
   {
+    "type": "))",
+    "named": false
+  },
+  {
     "type": "-",
+    "named": false
+  },
+  {
+    "type": "/",
+    "named": false
+  },
+  {
+    "type": ":",
     "named": false
   },
   {
@@ -1107,8 +1622,24 @@
     "named": false
   },
   {
+    "type": "[[",
+    "named": false
+  },
+  {
+    "type": "]",
+    "named": false
+  },
+  {
+    "type": "]]",
+    "named": false
+  },
+  {
     "type": "`",
     "named": false
+  },
+  {
+    "type": "arithmetic_expression",
+    "named": true
   },
   {
     "type": "bang",
@@ -1183,6 +1714,22 @@
     "named": false
   },
   {
+    "type": "glob_qualifier",
+    "named": true
+  },
+  {
+    "type": "heredoc_content",
+    "named": true
+  },
+  {
+    "type": "heredoc_end",
+    "named": true
+  },
+  {
+    "type": "heredoc_start",
+    "named": true
+  },
+  {
     "type": "if",
     "named": false
   },
@@ -1200,6 +1747,10 @@
     "named": false
   },
   {
+    "type": "parameter_operator",
+    "named": true
+  },
+  {
     "type": "redirect_operator",
     "named": true
   },
@@ -1210,6 +1761,10 @@
   {
     "type": "select",
     "named": false
+  },
+  {
+    "type": "test_operator",
+    "named": true
   },
   {
     "type": "then",

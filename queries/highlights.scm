@@ -10,9 +10,12 @@
 (variable_name) @variable
 (variable_expansion) @variable
 (parameter_expansion) @variable.parameter
+(arithmetic_expansion) @embedded
 (command_substitution) @embedded
 (process_substitution) @embedded
 (parameter_flags) @attribute
+(parameter_operator) @operator
+(glob_qualifier) @attribute
 
 ; Commands and functions
 (simple_command
@@ -29,6 +32,8 @@
   "else"
   "elif"
   "fi"
+  "[["
+  "]]"
   "for"
   "foreach"
   "while"
@@ -47,6 +52,8 @@
 
 ; Operators and delimiters
 (redirect_operator) @operator
+(conditional_operator) @operator
+(test_operator) @operator
 
 (list_operator) @operator
 (bang) @operator
@@ -57,6 +64,10 @@
   ";"
   ";;"
   "&"
+  "(("
+  "))"
+  "$(("
+  "$["
 ] @operator
 
 [
