@@ -1,0 +1,321 @@
+==================
+Heredoc redirects
+==================
+
+cat <<EOF
+hello
+EOF
+cat <<-EOF
+	hello
+EOF
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (redirect
+            (redirect_operator)
+            (heredoc_start)))))
+    (heredoc_body
+      (heredoc_content)
+      (heredoc_end)))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (redirect
+            (redirect_operator)
+            (heredoc_start)))))
+    (heredoc_body
+      (heredoc_content)
+      (heredoc_end))))
+
+==================
+Arithmetic commands and expansions
+==================
+
+print $((1 + 2))
+(( count += 1 ))
+for ((i = 0; i < 3; i++)); do echo $i; done
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (arithmetic_expansion
+            (arithmetic_expression))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (arithmetic_command
+          (arithmetic_expression)))))
+  (terminated_statement
+    (list
+      (pipeline
+        (for_statement
+          (c_style_for_clause
+            (arithmetic_expression)
+            (arithmetic_expression)
+            (arithmetic_expression))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (variable_expansion
+                    (variable_name)))))))))))
+
+==================
+Conditional expressions
+==================
+
+[[ -n $name && $file == *.zsh ]]
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (conditional_command
+          (conditional_expression
+            (test_unary_expression
+              (test_operator)
+              (variable_expansion
+                (variable_name)))
+            (conditional_operator)
+            (test_binary_expression
+              (variable_expansion
+                (variable_name))
+              (test_operator)
+              (word))))))))
+
+==================
+Glob qualifiers
+==================
+
+print *.zsh(.) *(#qN)
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (glob_pattern
+            (word)
+            (glob_qualifier))
+          (glob_pattern
+            (word)
+            (glob_qualifier)))))))
+
+==================
+Structured parameter expansion operators
+==================
+
+print ${name:-default} ${path##*/} ${value/pat/repl} ${array:1:2}
+print ${${nested:-fallback}#fall}
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            (variable_name)
+            (parameter_operator)
+            (word))
+          (parameter_expansion
+            (variable_name)
+            (parameter_operator)
+            (word))
+          (parameter_expansion
+            (variable_name)
+            (parameter_substitution
+              (word)
+              (word)))
+          (parameter_expansion
+            (variable_name)
+            (parameter_slice
+              (word)
+              (word)))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            (parameter_expansion
+              (variable_name)
+              (parameter_operator)
+              (word))
+            (parameter_operator)
+            (word)))))))
+
+==================
+Option and emulation command forms
+==================
+
+emulate -L zsh
+setopt extendedglob
+unsetopt nomatch
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)
+          (word)))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word))))))
+
+==================
+Zshrc style fixture
+==================
+
+alias ll='ls -lah'
+alias gst='git status --short'
+export EDITOR=${EDITOR:-vim}
+export PATH=${HOME}/bin:$PATH
+autoload -Uz compinit promptinit
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+bindkey '^R' history-incremental-search-backward
+[[ -n $ZDOTDIR ]] && source ${ZDOTDIR:-$HOME}/.zshrc.local
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (assignment
+            (variable_name)
+            (single_quoted_string))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (assignment
+            (variable_name)
+            (single_quoted_string))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (assignment
+            (variable_name)
+            (parameter_expansion
+              (variable_name)
+              (parameter_operator)
+              (word)))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (assignment
+            (variable_name)
+            (parameter_expansion
+              (variable_name)))
+          (word)
+          (variable_expansion
+            (variable_name))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)
+          (word)
+          (word)))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (single_quoted_string)
+          (word)
+          (single_quoted_string)))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (single_quoted_string)
+          (word)))))
+  (terminated_statement
+    (list
+      (pipeline
+        (conditional_command
+          (conditional_expression
+            (test_unary_expression
+              (test_operator)
+              (variable_expansion
+                (variable_name))))))
+      (list_operator)
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            (variable_name)
+            (parameter_operator)
+            (variable_expansion
+              (variable_name)))
+          (word))))))
