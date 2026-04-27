@@ -42,6 +42,13 @@ module.exports = grammar({
     $.line_continuation,
   ],
 
+  externals: $ => [
+    $.heredoc_start,
+    $._heredoc_strip_start,
+    $.heredoc_content,
+    $.heredoc_end,
+  ],
+
   conflicts: $ => [
     [$.simple_command],
     [$.simple_command, $._heredoc_simple_command],
@@ -182,7 +189,9 @@ module.exports = grammar({
       ...REDIRECT_OPERATORS,
     ))),
 
-    heredoc_operator: _ => token(prec(3, choice('<<-', '<<'))),
+    heredoc_operator: _ => token(prec(3, '<<')),
+
+    _heredoc_strip_operator: _ => token(prec(3, '<<-')),
 
     _herestring_redirect: $ => seq(
       optional(/[0-9]+/),
@@ -192,32 +201,23 @@ module.exports = grammar({
 
     herestring_operator: _ => token(prec(4, '<<<')),
 
-    _heredoc_redirect: $ => seq(
-      optional(/[0-9]+/),
-      alias($.heredoc_operator, $.redirect_operator),
-      $.heredoc_start,
+    _heredoc_redirect: $ => choice(
+      seq(
+        optional(/[0-9]+/),
+        alias($.heredoc_operator, $.redirect_operator),
+        $.heredoc_start,
+      ),
+      seq(
+        optional(/[0-9]+/),
+        alias($._heredoc_strip_operator, $.redirect_operator),
+        alias($._heredoc_strip_start, $.heredoc_start),
+      ),
     ),
-
-    heredoc_start: _ => token(prec(10, choice(
-      /[A-Za-z_][A-Za-z0-9_]*/,
-      seq("'", /[^'\n]+/, "'"),
-      seq('"', /[^"\n]+/, '"'),
-    ))),
 
     heredoc_body: $ => seq(
       repeat($.heredoc_content),
       $.heredoc_end,
     ),
-
-    heredoc_content: _ => token(choice(
-      /[\t ]*\r?\n/,
-      /[\t ]*[a-z][A-Za-z0-9_]*\r?\n/,
-      /[^\nA-Za-z_\t ][^\n]*\r?\n/,
-      /[\t ]*[A-Za-z_][A-Za-z0-9_]*[^\nA-Za-z0-9_\r][^\n]*\r?\n/,
-      /[\t ]*[0-9][^\n]*\r?\n/,
-    )),
-
-    heredoc_end: _ => token(/[\t ]*[A-Z_][A-Z0-9_]*\r?\n?/),
 
     precommand: _ => choice(
       'nocorrect',
