@@ -344,7 +344,7 @@ module.exports = grammar({
       alias($._case_comment, $.comment),
     ),
 
-    _case_comment: _ => token(prec(1, seq('#', /.*/))),
+    _case_comment: _ => token(prec(2, seq('#', /.*/))),
 
     _case_statement: $ => choice(
       seq($.list, alias($._case_comment, $.comment)),
@@ -864,7 +864,7 @@ module.exports = grammar({
 
     variable_name: _ => /[A-Za-z_][A-Za-z0-9_]*/,
 
-    comment: _ => token(seq('#', /.*/)),
+    comment: _ => token(prec(1, seq('#', /.*/))),
 
     line_continuation: _ => token(seq('\\', /\r?\n/)),
 
