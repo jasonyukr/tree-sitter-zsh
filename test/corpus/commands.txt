@@ -1,0 +1,201 @@
+==================
+Simple commands
+==================
+
+echo hi
+print -r -- "$HOME"
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)
+          (word)
+          (double_quoted_string
+            (variable_expansion
+              (variable_name))))))))
+
+==================
+Assignments
+==================
+
+foo=bar
+typeset path=/tmp
+export EDITOR=vim
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            (variable_name)
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (assignment
+            (variable_name)
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (assignment
+            (variable_name)
+            (word)))))))
+
+==================
+Strings and comments
+==================
+
+echo "hello $name" 'literal text'
+# trailing comment
+echo done # inline comment
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (double_quoted_string
+            (variable_expansion
+              (variable_name)))
+          (single_quoted_string)))))
+  (terminated_statement
+    (comment))
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word))))
+    (comment))
+  (terminated_statement))
+
+==================
+Lists and pipelines
+==================
+
+echo one; echo two && echo three || echo four
+printf foo | grep f | wc -l
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)))
+      (list_operator)
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)))
+      (list_operator)
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word))
+        (simple_command
+          (command_name
+            (word))
+          (word))
+        (simple_command
+          (command_name
+            (word))
+          (word))))))
+
+==================
+Redirects
+==================
+
+echo hi >out
+cat <in >>out 2>err
+exec 3>&1
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)
+          (redirect
+            (redirect_operator)
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (redirect
+            (redirect_operator)
+            (word))
+          (redirect
+            (redirect_operator)
+            (word))
+          (redirect
+            (redirect_operator)
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (precommand)
+          (redirect
+            (redirect_operator)
+            (word)))))))

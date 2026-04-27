@@ -1,0 +1,85 @@
+==================
+POSIX function form
+==================
+
+foo() {
+  echo hi
+}
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          (command_name
+            (word))
+          (block
+            (terminated_statement)
+            (terminated_statement
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (word)))))))))))
+
+==================
+Zsh function keyword form
+==================
+
+function foo {
+  print done
+}
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          (command_name
+            (word))
+          (block
+            (terminated_statement)
+            (terminated_statement
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (word)))))))))))
+
+==================
+Multiple function names
+==================
+
+function foo bar {
+  echo shared
+}
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          (command_name
+            (word))
+          (command_name
+            (word))
+          (block
+            (terminated_statement)
+            (terminated_statement
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (word)))))))))))

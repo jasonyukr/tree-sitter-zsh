@@ -1,0 +1,154 @@
+==================
+Repeat statement
+==================
+
+repeat 3 echo hi
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (repeat_statement
+          (word)
+          (simple_command
+            (command_name
+              (word))
+            (word)))))))
+
+==================
+Foreach statement
+==================
+
+foreach x (a b); echo $x; end
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (foreach_statement
+          (variable_name)
+          (word)
+          (word)
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (variable_expansion
+                    (variable_name)))))))))))
+
+==================
+Coproc command
+==================
+
+coproc cat
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (precommand)
+          (command_name
+            (word)))))))
+
+==================
+Nocorrect precommand
+==================
+
+nocorrect git status
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (precommand)
+          (command_name
+            (word))
+          (word))))))
+
+==================
+Parameter flags and command substitution
+==================
+
+print ${(@f)$(cmd)}
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            (parameter_flags)
+            (command_substitution
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))))))))))))
+
+==================
+Process substitution
+==================
+
+cat =(print hi)
+diff <(print old) >(cat >out)
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (process_substitution
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (process_substitution
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))
+          (process_substitution
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (redirect
+                    (redirect_operator)
+                    (word)))))))))))

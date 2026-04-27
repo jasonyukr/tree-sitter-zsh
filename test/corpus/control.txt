@@ -1,0 +1,206 @@
+==================
+If statement
+==================
+
+if test -f file; then
+  echo yes
+else
+  echo no
+fi
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (if_statement
+          (list
+            (pipeline
+              (simple_command
+                (command_name
+                  (word))
+                (word))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))))))
+          (terminated_statement)
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))
+          (else_clause
+            (terminated_statement)
+            (terminated_statement
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (word)))))))))))
+
+==================
+For statement
+==================
+
+for x in a b; do
+  echo $x
+done
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (for_statement
+          (variable_name)
+          (word)
+          (word)
+          (terminated_statement)
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (variable_expansion
+                    (variable_name)))))))))))
+
+==================
+While statement
+==================
+
+while true; do
+  echo loop
+done
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (while_statement
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))))))
+          (terminated_statement)
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word))))))))))
+
+==================
+Until statement
+==================
+
+until false; do
+  echo wait
+done
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (until_statement
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))))))
+          (terminated_statement)
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word))))))))))
+
+==================
+Case statement
+==================
+
+case $x in
+  a) echo alpha ;;
+  b|c) echo beta ;;
+esac
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (case_statement
+          (variable_expansion
+            (variable_name))
+          (case_item
+            (case_pattern
+              (word))
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))
+          (case_item
+            (case_pattern
+              (word)
+              (word))
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word))))))))))
+
+==================
+Select statement
+==================
+
+select item in a b; do
+  echo $item
+done
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (select_statement
+          (variable_name)
+          (word)
+          (word)
+          (terminated_statement)
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (variable_expansion
+                    (variable_name)))))))))))
