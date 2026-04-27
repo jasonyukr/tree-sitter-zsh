@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "MVP Tree-sitter grammar for zsh",
+    "authors": [
+      {
+        "name": "Jason Yu"
+      }
+    ]
+  },
+  "grammars": [
+    {
+      "name": "zsh",
+      "camelcase": "Zsh",
+      "scope": "source.zsh",
+      "path": ".",
+      "file-types": [
+        "zsh",
+        "zshrc",
+        "zprofile",
+        "zlogin",
+        "zlogout",
+        "zshenv"
+      ],
+      "injection-regex": "^(zsh|ZSH)$",
+      "first-line-regex": "^#!.*\\b(?:env\\s+)?zsh\\b"
+    }
+  ]
+}

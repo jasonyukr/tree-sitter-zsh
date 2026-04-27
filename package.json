@@ -1,0 +1,40 @@
+{
+  "name": "tree-sitter-zsh",
+  "version": "0.1.0",
+  "description": "MVP Tree-sitter grammar for zsh",
+  "license": "MIT",
+  "type": "commonjs",
+  "keywords": [
+    "tree-sitter",
+    "zsh",
+    "shell"
+  ],
+  "files": [
+    "grammar.js",
+    "tree-sitter.json",
+    "README.md",
+    "LICENSE",
+    "queries/**",
+    "src/**"
+  ],
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.26.8"
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.zsh",
+      "file-types": [
+        "zsh",
+        "zshrc",
+        "zprofile",
+        "zlogin",
+        "zlogout",
+        "zshenv"
+      ]
+    }
+  ]
+}
