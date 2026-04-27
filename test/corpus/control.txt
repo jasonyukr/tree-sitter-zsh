@@ -101,6 +101,69 @@ for i in {1..40}; do echo $i; done
                     (variable_name)))))))))))
 
 ==================
+Short loop and select forms
+==================
+
+while [[ -n $x ]] { print $x }
+for x (a b) { print $x }
+select x (a b) { print $x }
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (while_statement
+          (list
+            (pipeline
+              (conditional_command
+                (conditional_expression
+                  (test_unary_expression
+                    (test_operator)
+                    (variable_expansion
+                      (variable_name)))))))
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (variable_expansion
+                    (variable_name))))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (for_statement
+          variable: (variable_name)
+          (word)
+          (word)
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (variable_expansion
+                    (variable_name))))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (select_statement
+          variable: (variable_name)
+          (word)
+          (word)
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (variable_expansion
+                    (variable_name)))))))))))
+
+==================
 Tranche 2 arithmetic and conditional negation
 ==================
 

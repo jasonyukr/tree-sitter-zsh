@@ -130,6 +130,52 @@ print *.zsh(.) *(#qN)
             (glob_qualifier)))))))
 
 ==================
+Bracket and numeric glob patterns
+==================
+
+print foo[abc].zsh [[:alpha:]] <->
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (glob_pattern
+            pattern: (word))
+          (glob_pattern
+            pattern: (word))
+          (glob_pattern
+            pattern: (word)))))))
+
+==================
+Richer glob qualifiers
+==================
+
+print file*(N-/) file*(.om[1,3])
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (glob_pattern
+            pattern: (word)
+            (glob_qualifier))
+          (glob_pattern
+            pattern: (word)
+            (glob_qualifier)))))))
+
+==================
 Structured parameter expansion operators
 ==================
 
@@ -161,9 +207,9 @@ print ${${nested:-fallback}#fall}
               (word)))
           (parameter_expansion
             (variable_name)
-            (parameter_slice
-              (word)
-              (word)))))))
+                (parameter_slice
+                  (word)
+                  (word)))))))
   (terminated_statement
     (list
       (pipeline
@@ -177,6 +223,38 @@ print ${${nested:-fallback}#fall}
               (word))
             (parameter_operator)
             (word)))))))
+
+==================
+Parameter substitution variants
+==================
+
+print ${var//pat/repl} ${var/#pat/repl} ${var/%pat/repl}
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            parameter: (variable_name)
+            (parameter_substitution
+              (word)
+              (word)))
+          (parameter_expansion
+            parameter: (variable_name)
+            (parameter_substitution
+              (word)
+              (word)))
+          (parameter_expansion
+            parameter: (variable_name)
+            (parameter_substitution
+              (word)
+              (word))))))))
 
 ==================
 Tranche 5 flag-only parameter expansions

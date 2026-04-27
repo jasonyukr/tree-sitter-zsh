@@ -166,3 +166,46 @@ function foo bar {
                     (command_name
                       (word))
                     (word)))))))))))
+
+==================
+Short function bodies
+==================
+
+function short print hi
+short() print hi
+function short () print hi
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          name: (command_name
+            (word))
+          (simple_command
+            (command_name
+              (word))
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          name: (command_name
+            (word))
+          (simple_command
+            (command_name
+              (word))
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          name: (command_name
+            (word))
+          (simple_command
+            (command_name
+              (word))
+            (word)))))))
