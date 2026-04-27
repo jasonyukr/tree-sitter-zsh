@@ -161,11 +161,11 @@ module.exports = grammar({
       ')',
     ),
 
-    _assignment_name: _ => token(seq(
+    _assignment_name: _ => token(prec(2, seq(
       /[A-Za-z_][A-Za-z0-9_]*/,
       optional(seq('[', /[^\]\n]+/, ']')),
       choice('+=', ':=', '='),
-    )),
+    ))),
 
     redirect: $ => prec.right(choice(
       $._herestring_redirect,
@@ -269,6 +269,16 @@ module.exports = grammar({
         repeat($._statement),
         'done',
       ),
+      seq(
+        'for',
+        field('variable', $.variable_name),
+        optional(seq(
+          choice('in', '('),
+          repeat($._word),
+          optional(')'),
+        )),
+        $.block,
+      ),
     ),
 
     c_style_for_clause: $ => seq(
@@ -281,12 +291,19 @@ module.exports = grammar({
       '))',
     ),
 
-    while_statement: $ => seq(
-      'while',
-      $._statement_body,
-      'do',
-      repeat($._statement),
-      'done',
+    while_statement: $ => choice(
+      seq(
+        'while',
+        $._statement_body,
+        'do',
+        repeat($._statement),
+        'done',
+      ),
+      prec(1, seq(
+        'while',
+        $.list,
+        $.block,
+      )),
     ),
 
     until_statement: $ => seq(
@@ -402,13 +419,25 @@ module.exports = grammar({
       token.immediate("'"),
     ),
 
-    select_statement: $ => seq(
-      'select',
-      field('variable', $.variable_name),
-      optional(seq('in', repeat($._word))),
-      $._do,
-      repeat($._statement),
-      'done',
+    select_statement: $ => choice(
+      seq(
+        'select',
+        field('variable', $.variable_name),
+        optional(seq('in', repeat($._word))),
+        $._do,
+        repeat($._statement),
+        'done',
+      ),
+      seq(
+        'select',
+        field('variable', $.variable_name),
+        optional(seq(
+          choice('in', '('),
+          repeat($._word),
+          optional(')'),
+        )),
+        $.block,
+      ),
     ),
 
     repeat_statement: $ => seq(
@@ -430,22 +459,41 @@ module.exports = grammar({
     )),
 
     function_definition: $ => prec.right(PREC.command + 1, choice(
-      seq(
+      prec(PREC.command + 3, seq(
         'function',
+        field('name', $.command_name),
         repeat1(field('name', $.command_name)),
         optional(seq('(', ')')),
         choice($.block, $.subshell),
+      )),
+      prec(PREC.command + 2, seq(
+        'function',
+        field('name', $.command_name),
+        optional(seq('(', ')')),
+        choice($.block, $.subshell),
+      )),
+      seq(
+        'function',
+        field('name', $.command_name),
+        optional(seq('(', ')')),
+        alias($._short_function_body, $.simple_command),
       ),
       seq(
         'function',
         choice($.block, $.subshell),
         repeat(choice($._command_part, $.redirect)),
       ),
-      seq(
+      prec(PREC.command + 2, seq(
         field('name', $.command_name),
         '(',
         ')',
         choice($.block, $.subshell),
+      )),
+      seq(
+        field('name', $.command_name),
+        '(',
+        ')',
+        alias($._short_function_body, $.simple_command),
       ),
       seq(
         '(',
@@ -453,6 +501,13 @@ module.exports = grammar({
         choice($.block, $.subshell),
         repeat(choice($._command_part, $.redirect)),
       ),
+    )),
+
+    _short_function_body: $ => prec.right(PREC.command, seq(
+      repeat(choice($.assignment, $.redirect)),
+      repeat($.precommand),
+      $.command_name,
+      repeat1(choice($.assignment, $._command_part, $.redirect)),
     )),
 
     block: $ => seq(
@@ -764,7 +819,11 @@ module.exports = grammar({
     special_parameter: _ => token.immediate(/[0-9#?@$!*_-]/),
 
     glob_pattern: $ => seq(
-      field('pattern', alias(token(prec(1, /[^\s'"`$\\;|&<>(){}=>]*[*?][^\s'"`$\\;|&<>(){}=>]*/)), $.word)),
+      field('pattern', alias(choice(
+        token(prec(1, /[^\s'"`$\\;|&<>(){}=>]*[*?][^\s'"`$\\;|&<>(){}=>]*/)),
+        token(prec(1, /[^\s'"`$\\;|&<>(){}=>\x5b\x5d]*\[[^\s'"`$\\;|&<>(){}=>]+\][^\s'"`$\\;|&<>(){}=>\x5b\x5d]*/)),
+        token(prec(4, /<[0-9]*-[0-9]*>/)),
+      ), $.word)),
       optional($.glob_qualifier),
     ),
 
