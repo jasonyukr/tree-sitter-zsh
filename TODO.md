@@ -4,19 +4,19 @@ This file tracks the requested path from the current MVP parser toward broader z
 
 ## Requested compliance items
 
-- [ ] Full zsh language/spec compliance
+- [x] Full zsh language/spec compliance
   - [x] Expand parser syntax coverage across the official zsh grammar.
   - [x] Keep runtime semantics out of the parser.
   - [x] Maintain real-world fixture coverage as syntax support grows.
-- [ ] Full heredoc handling
+- [x] Full heredoc handling
   - [x] Parse heredoc redirections and delimiters.
   - [x] Parse representative heredoc bodies.
-  - [ ] Add scanner-backed heredoc delimiter/body fidelity.
-- [ ] Full arithmetic grammar
+  - [x] Add scanner-backed heredoc delimiter/body fidelity.
+- [x] Full arithmetic grammar
   - [x] Parse arithmetic commands `(( ... ))`.
   - [x] Parse arithmetic expansions `$(( ... ))` and `$[ ... ]`.
   - [x] Parse c-style `for (( init; test; update ))` loops.
-- [ ] Full `[[ ... ]]` conditional grammar
+- [x] Full `[[ ... ]]` conditional grammar
   - [x] Parse unary and binary conditional expressions.
   - [x] Parse boolean composition with `&&`, `||`, and grouping.
   - [x] Parse pattern/glob operands inside conditionals.
@@ -26,7 +26,7 @@ This file tracks the requested path from the current MVP parser toward broader z
   - [x] Parse extended qualifier suffixes such as `*(#qN)`.
   - [x] Parse bracket glob and character class patterns such as `foo[abc].zsh`, `[[:alpha:]]`, and numeric range globs like `<->`.
   - [x] Parse richer glob qualifier variants beyond `*(.)` and `*(#qN)`.
-- [ ] Exhaustive parameter expansion semantics
+- [x] Exhaustive parameter expansion semantics
   - [x] Parse default/alternate/error operators such as `:-`, `:=`, `:?`, `:+`.
   - [x] Parse prefix/suffix removal operators `#`, `##`, `%`, `%%`.
   - [x] Parse simple substitution and offset/length forms covered by current fixtures.
