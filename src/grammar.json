@@ -1119,17 +1119,19 @@
         "type": "PREC",
         "value": 3,
         "content": {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "<<-"
-            },
-            {
-              "type": "STRING",
-              "value": "<<"
-            }
-          ]
+          "type": "STRING",
+          "value": "<<"
+        }
+      }
+    },
+    "_heredoc_strip_operator": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 3,
+        "content": {
+          "type": "STRING",
+          "value": "<<-"
         }
       }
     },
@@ -1192,84 +1194,74 @@
       }
     },
     "_heredoc_redirect": {
-      "type": "SEQ",
+      "type": "CHOICE",
       "members": [
         {
-          "type": "CHOICE",
+          "type": "SEQ",
           "members": [
             {
-              "type": "PATTERN",
-              "value": "[0-9]+"
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "PATTERN",
+                  "value": "[0-9]+"
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
             },
             {
-              "type": "BLANK"
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "heredoc_operator"
+              },
+              "named": true,
+              "value": "redirect_operator"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "heredoc_start"
             }
           ]
         },
         {
-          "type": "ALIAS",
-          "content": {
-            "type": "SYMBOL",
-            "name": "heredoc_operator"
-          },
-          "named": true,
-          "value": "redirect_operator"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "heredoc_start"
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "PATTERN",
+                  "value": "[0-9]+"
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_heredoc_strip_operator"
+              },
+              "named": true,
+              "value": "redirect_operator"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_heredoc_strip_start"
+              },
+              "named": true,
+              "value": "heredoc_start"
+            }
+          ]
         }
       ]
-    },
-    "heredoc_start": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PREC",
-        "value": 10,
-        "content": {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "PATTERN",
-              "value": "[A-Za-z_][A-Za-z0-9_]*"
-            },
-            {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "STRING",
-                  "value": "'"
-                },
-                {
-                  "type": "PATTERN",
-                  "value": "[^'\\n]+"
-                },
-                {
-                  "type": "STRING",
-                  "value": "'"
-                }
-              ]
-            },
-            {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "STRING",
-                  "value": "\""
-                },
-                {
-                  "type": "PATTERN",
-                  "value": "[^\"\\n]+"
-                },
-                {
-                  "type": "STRING",
-                  "value": "\""
-                }
-              ]
-            }
-          ]
-        }
-      }
     },
     "heredoc_body": {
       "type": "SEQ",
@@ -1286,41 +1278,6 @@
           "name": "heredoc_end"
         }
       ]
-    },
-    "heredoc_content": {
-      "type": "TOKEN",
-      "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "PATTERN",
-            "value": "[\\t ]*\\r?\\n"
-          },
-          {
-            "type": "PATTERN",
-            "value": "[\\t ]*[a-z][A-Za-z0-9_]*\\r?\\n"
-          },
-          {
-            "type": "PATTERN",
-            "value": "[^\\nA-Za-z_\\t ][^\\n]*\\r?\\n"
-          },
-          {
-            "type": "PATTERN",
-            "value": "[\\t ]*[A-Za-z_][A-Za-z0-9_]*[^\\nA-Za-z0-9_\\r][^\\n]*\\r?\\n"
-          },
-          {
-            "type": "PATTERN",
-            "value": "[\\t ]*[0-9][^\\n]*\\r?\\n"
-          }
-        ]
-      }
-    },
-    "heredoc_end": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PATTERN",
-        "value": "[\\t ]*[A-Z_][A-Z0-9_]*\\r?\\n?"
-      }
     },
     "precommand": {
       "type": "CHOICE",
@@ -4948,7 +4905,24 @@
     ]
   ],
   "precedences": [],
-  "externals": [],
+  "externals": [
+    {
+      "type": "SYMBOL",
+      "name": "heredoc_start"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_heredoc_strip_start"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "heredoc_content"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "heredoc_end"
+    }
+  ],
   "inline": [],
   "supertypes": [],
   "reserved": {}

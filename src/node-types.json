@@ -1337,6 +1337,11 @@
     }
   },
   {
+    "type": "redirect_operator",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "repeat_statement",
     "named": true,
     "fields": {},
@@ -2033,6 +2038,10 @@
     "named": false
   },
   {
+    "type": "<<-",
+    "named": false
+  },
+  {
     "type": "[",
     "named": false
   },
@@ -2171,10 +2180,6 @@
   },
   {
     "type": "parameter_subscript",
-    "named": true
-  },
-  {
-    "type": "redirect_operator",
     "named": true
   },
   {
