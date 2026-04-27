@@ -5,14 +5,104 @@ Heredoc redirects
 cat <<EOF
 hello
 EOF
+cat <<end
+END
+end
+cat <<'PY'
+print('hello')
+PY
+cat <<"JS"
+console.log("hello")
+JS
 cat <<-EOF
 	hello
+	EOF
+cat <<EOF
+EOFX
+EOF
+cat <<EOF
+	EOF
+EOF
+cat <<-EOF
+ EOF
 EOF
 
 ---
 
 (source_file
   (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (redirect
+            (redirect_operator)
+            (heredoc_start)))))
+    (heredoc_body
+      (heredoc_content)
+      (heredoc_end)))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (redirect
+            (redirect_operator)
+            (heredoc_start)))))
+    (heredoc_body
+      (heredoc_content)
+      (heredoc_end)))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (redirect
+            (redirect_operator)
+            (heredoc_start)))))
+    (heredoc_body
+      (heredoc_content)
+      (heredoc_end)))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (redirect
+            (redirect_operator)
+            (heredoc_start)))))
+    (heredoc_body
+      (heredoc_content)
+      (heredoc_end)))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (redirect
+            (redirect_operator)
+            (heredoc_start)))))
+    (heredoc_body
+      (heredoc_content)
+      (heredoc_end)))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (redirect
+            (redirect_operator)
+            (heredoc_start)))))
+    (heredoc_body
+      (heredoc_content)
+      (heredoc_end)))
   (terminated_statement
     (list
       (pipeline
