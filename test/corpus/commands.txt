@@ -87,6 +87,7 @@ Strings and comments
 ==================
 
 echo "hello $name" 'literal text'
+###############################################################################
 # trailing comment
 echo done # inline comment
 
@@ -102,6 +103,9 @@ echo done # inline comment
             (word))
           (double_quoted_string)
           (single_quoted_string)))))
+  (terminated_statement
+    (comment))
+  (terminated_statement)
   (terminated_statement
     (comment))
   (terminated_statement)
