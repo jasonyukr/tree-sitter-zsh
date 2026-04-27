@@ -116,7 +116,7 @@ module.exports = grammar({
 
     assignment: $ => prec.right(seq(
       field('name', alias($._assignment_name, $.variable_name)),
-      optional($._word),
+      optional(choice(alias(token.immediate(/[0-9]+/), $.word), $._word)),
     )),
 
     _assignment_name: _ => token(seq(
@@ -301,7 +301,7 @@ module.exports = grammar({
       'end',
     )),
 
-    function_definition: $ => prec(PREC.command + 1, choice(
+    function_definition: $ => prec.right(PREC.command + 1, choice(
       seq(
         'function',
         repeat1(field('name', $.command_name)),
@@ -309,10 +309,21 @@ module.exports = grammar({
         choice($.block, $.subshell),
       ),
       seq(
+        'function',
+        choice($.block, $.subshell),
+        repeat(choice($._command_part, $.redirect)),
+      ),
+      seq(
         field('name', $.command_name),
         '(',
         ')',
         choice($.block, $.subshell),
+      ),
+      seq(
+        '(',
+        ')',
+        choice($.block, $.subshell),
+        repeat(choice($._command_part, $.redirect)),
       ),
     )),
 

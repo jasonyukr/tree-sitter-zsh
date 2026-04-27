@@ -27,6 +27,89 @@ foo() {
                     (word)))))))))))
 
 ==================
+Anonymous POSIX function form
+==================
+
+() { print hi; }
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          (block
+            (terminated_statement
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (word)))))))))))
+
+==================
+Anonymous function with trailing argument
+==================
+
+function { local x=1; print $x; } arg1
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          (block
+            (terminated_statement
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (assignment
+                      (variable_name)
+                      (word))))))
+            (terminated_statement
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (variable_expansion
+                      (variable_name)))))))
+          (word))))))
+
+==================
+Anonymous function with trailing redirect
+==================
+
+function { print hi; } >out
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          (block
+            (terminated_statement
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (word))))))
+          (redirect
+            (redirect_operator)
+            (word)))))))
+
+==================
 Zsh function keyword form
 ==================
 
