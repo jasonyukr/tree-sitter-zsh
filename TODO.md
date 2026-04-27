@@ -11,7 +11,7 @@ This file tracks the requested path from the current MVP parser toward broader z
 - [ ] Full heredoc handling
   - [x] Parse heredoc redirections and delimiters.
   - [x] Parse representative heredoc bodies.
-  - [ ] Track scanner-backed delimiter/body fidelity as remaining work if needed.
+  - [ ] Add scanner-backed heredoc delimiter/body fidelity.
 - [ ] Full arithmetic grammar
   - [x] Parse arithmetic commands `(( ... ))`.
   - [x] Parse arithmetic expansions `$(( ... ))` and `$[ ... ]`.
@@ -24,11 +24,18 @@ This file tracks the requested path from the current MVP parser toward broader z
   - [x] Parse common glob words such as `*.zsh` and `**/*.zsh`.
   - [x] Parse bare qualifier suffixes such as `*(.)`.
   - [x] Parse extended qualifier suffixes such as `*(#qN)`.
+  - [ ] Parse bracket glob and character class patterns such as `foo[abc].zsh`, `[[:alpha:]]`, and numeric range globs like `<->`.
+  - [ ] Parse richer glob qualifier variants beyond `*(.)` and `*(#qN)`.
 - [ ] Exhaustive parameter expansion semantics
   - [x] Parse default/alternate/error operators such as `:-`, `:=`, `:?`, `:+`.
   - [x] Parse prefix/suffix removal operators `#`, `##`, `%`, `%%`.
-  - [x] Parse substitution and offset/length forms.
+  - [x] Parse simple substitution and offset/length forms covered by current fixtures.
+  - [ ] Parse substitution variants such as `${var//pat/repl}`, `${var/#pat/repl}`, and `${var/%pat/repl}`.
   - [ ] Leave expansion transformation semantics to runtime.
+- [ ] Alternate/short command forms
+  - [ ] Parse `while list { list }`.
+  - [ ] Parse short `for` and short `select` forms.
+  - [ ] Parse short `function` bodies.
 - [ ] Option/emulation-sensitive zsh parsing
   - [x] Parse common `emulate`, `setopt`, and `unsetopt` forms in fixtures.
   - [x] Accept syntax variants commonly seen under option-sensitive usage.
