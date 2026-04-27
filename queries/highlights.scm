@@ -5,6 +5,8 @@
 (double_quoted_string) @string
 (single_quoted_string) @string
 (ansi_c_string) @string
+(heredoc_body) @string
+(heredoc_start) @string
 
 ; Variables and expansions
 (variable_name) @variable
@@ -41,6 +43,7 @@
   "repeat"
   "do"
   "done"
+  "in"
   "case"
   "esac"
   "select"
@@ -49,6 +52,14 @@
   "nocorrect"
   "end"
 ] @keyword
+
+(simple_command
+  (command_name
+    (word) @keyword)
+  (#match? @keyword "^(export|unset)$"))
+
+; Constants
+(option_word) @constant
 
 ; Operators and delimiters
 (redirect_operator) @operator
