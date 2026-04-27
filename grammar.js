@@ -64,6 +64,7 @@ module.exports = grammar({
     _command: $ => choice(
       $.if_statement,
       $.conditional_command,
+      $.test_command,
       $.for_statement,
       $.while_statement,
       $.until_statement,
@@ -256,10 +257,17 @@ module.exports = grammar({
       'case',
       $._word,
       choice('in', '('),
-      repeat($._terminator),
-      repeat(seq($.case_item, repeat($._terminator))),
+      repeat($._case_separator),
+      repeat(seq($.case_item, repeat($._case_separator))),
       'esac',
     ),
+
+    _case_separator: $ => choice(
+      $._terminator,
+      alias($._case_comment, $.comment),
+    ),
+
+    _case_comment: _ => token(prec(1, seq('#', /.*/))),
 
     case_item: $ => prec.right(seq(
       optional('('),
@@ -367,6 +375,12 @@ module.exports = grammar({
       '[[',
       optional($.conditional_expression),
       ']]',
+    ),
+
+    test_command: $ => seq(
+      '[',
+      optional($.conditional_expression),
+      ']',
     ),
 
     conditional_expression: $ => prec.left(seq(

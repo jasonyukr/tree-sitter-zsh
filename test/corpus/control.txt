@@ -177,6 +177,113 @@ esac
                   (word))))))))))
 
 ==================
+Case statement with test command
+==================
+
+case "$command" in
+  files)
+    echo files ;;
+
+  ############################################################
+  # fzf lines are directly from above $FZF_CTRL_T_OPTS.
+  # Same lines are duplicated to workaround the weird issues.
+  # Note that direct FZF_FD_XX variable expansion doesn't work inside the reload() below. So we use scripts indirectly.
+  *)
+    if [ -z "$FZF_FD_PREFIX" ]; then
+      FZF_FD_PREFIX_SEG=""
+    elif [ "$FZF_FD_PREFIX" = "." ]; then
+      FZF_FD_PREFIX_SEG=""
+    else
+      FZF_FD_PREFIX_SEG="($FZF_FD_PREFIX)"
+    fi
+    ;;
+esac
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (case_statement
+          (double_quoted_string
+            (variable_expansion
+              (variable_name)))
+          (case_item
+            (case_pattern
+              (word))
+            (terminated_statement)
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))
+          (comment)
+          (comment)
+          (comment)
+          (comment)
+          (case_item
+            (case_pattern
+              (glob_pattern
+                pattern: (word)))
+            (terminated_statement)
+            (terminated_statement
+              (list
+                (pipeline
+                  (if_statement
+                    (terminated_statement
+                      (list
+                        (pipeline
+                          (test_command
+                            (conditional_expression
+                              (test_unary_expression
+                                (test_operator)
+                                (double_quoted_string
+                                  (variable_expansion
+                                    (variable_name)))))))))
+                    (terminated_statement)
+                    (terminated_statement
+                      (list
+                        (pipeline
+                          (simple_command
+                            (assignment
+                              name: (variable_name)
+                              (double_quoted_string))))))
+                    (elif_clause
+                      (terminated_statement
+                        (list
+                          (pipeline
+                            (test_command
+                              (conditional_expression
+                                (test_binary_expression
+                                  (double_quoted_string
+                                    (variable_expansion
+                                      (variable_name)))
+                                  (test_operator)
+                                  (double_quoted_string)))))))
+                      (terminated_statement)
+                      (terminated_statement
+                        (list
+                          (pipeline
+                            (simple_command
+                              (assignment
+                                name: (variable_name)
+                                (double_quoted_string)))))))
+                    (else_clause
+                      (terminated_statement)
+                      (terminated_statement
+                        (list
+                          (pipeline
+                            (simple_command
+                              (assignment
+                                name: (variable_name)
+                                (double_quoted_string
+                                  (variable_expansion
+                                    (variable_name)))))))))))))))))))
+
+==================
 Select statement
 ==================
 
