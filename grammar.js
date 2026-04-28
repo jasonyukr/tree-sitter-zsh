@@ -356,9 +356,7 @@ module.exports = grammar({
       $._case_item_head,
       choice(
         $._case_terminator,
-        prec.dynamic(1, seq($.list, alias($._case_comment, $.comment), repeat($._case_statement), $._case_terminator)),
         seq(repeat1($._case_statement), $._case_terminator),
-        seq($.list, repeat($._case_statement), $._case_terminator),
       ),
     )),
 
