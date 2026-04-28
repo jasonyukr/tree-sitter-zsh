@@ -4767,17 +4767,8 @@
     "_statement_body": {
       "type": "REPEAT1",
       "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "terminated_statement"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "list"
-          }
-        ]
+        "type": "SYMBOL",
+        "name": "_statement"
       }
     },
     "_do": {

@@ -877,10 +877,7 @@ module.exports = grammar({
 
     bang: _ => token(prec(4, '!')),
 
-    _statement_body: $ => repeat1(choice(
-      $.terminated_statement,
-      $.list,
-    )),
+    _statement_body: $ => repeat1($._statement),
 
     _do: $ => choice(
       'do',
