@@ -259,26 +259,25 @@ module.exports = grammar({
       ),
       seq(
         'for',
-        field('variable', $.variable_name),
-        optional(seq(
-          choice('in', '('),
-          repeat($._word),
-          optional(')'),
-        )),
+        $._loop_word_list,
         $._do,
         repeat($._statement),
         'done',
       ),
       seq(
         'for',
-        field('variable', $.variable_name),
-        optional(seq(
-          choice('in', '('),
-          repeat($._word),
-          optional(')'),
-        )),
+        $._loop_word_list,
         $.block,
       ),
+    ),
+
+    _loop_word_list: $ => seq(
+      field('variable', $.variable_name),
+      optional(seq(
+        choice('in', '('),
+        repeat($._word),
+        optional(')'),
+      )),
     ),
 
     c_style_for_clause: $ => seq(
@@ -428,12 +427,7 @@ module.exports = grammar({
       ),
       seq(
         'select',
-        field('variable', $.variable_name),
-        optional(seq(
-          choice('in', '('),
-          repeat($._word),
-          optional(')'),
-        )),
+        $._loop_word_list,
         $.block,
       ),
     ),
