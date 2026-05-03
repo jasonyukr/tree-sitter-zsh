@@ -44,3 +44,7 @@ This file tracks the requested path from the current MVP parser toward broader z
   - [x] Add a representative `.zshrc`-style corpus fixture.
   - [x] Include aliases, exports, `autoload -Uz`, `zstyle`, `bindkey`, `[[ ... ]]`, and parameter expansion.
   - [x] Add more fixtures as real-world failures are discovered.
+
+## Recent zsh 5.9 syntax coverage
+
+The current parser-visible tranche adds timed commands; brace-form `if`/`elif`/`else`, `until`, and `case`; brace descriptor redirects; parameter operators such as `${+name}`, `${var::=default}`, `${var:#pat}`, `${var:|ary}`, `${var:*ary}`, `${var:^ary}`, and `${var:^^ary}`; and broader heredoc delimiters such as `EOF-1`. This is syntax coverage only and does not model runtime, alias, option, or expansion semantics.
