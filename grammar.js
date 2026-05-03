@@ -285,26 +285,25 @@ module.exports = grammar({
       ),
       seq(
         'for',
-        field('variable', $.variable_name),
-        optional(seq(
-          choice('in', '('),
-          repeat($._word),
-          optional(')'),
-        )),
+        $._loop_word_list,
         $._do,
         repeat($._statement),
         'done',
       ),
       seq(
         'for',
-        field('variable', $.variable_name),
-        optional(seq(
-          choice('in', '('),
-          repeat($._word),
-          optional(')'),
-        )),
+        $._loop_word_list,
         $.block,
       ),
+    ),
+
+    _loop_word_list: $ => seq(
+      field('variable', $.variable_name),
+      optional(seq(
+        choice('in', '('),
+        repeat($._word),
+        optional(')'),
+      )),
     ),
 
     c_style_for_clause: $ => seq(
@@ -396,9 +395,7 @@ module.exports = grammar({
       $._case_item_head,
       choice(
         $._case_terminator,
-        prec.dynamic(1, seq($.list, alias($._case_comment, $.comment), repeat($._case_statement), $._case_terminator)),
         seq(repeat1($._case_statement), $._case_terminator),
-        seq($.list, repeat($._case_statement), $._case_terminator),
       ),
     )),
 
@@ -470,12 +467,7 @@ module.exports = grammar({
       ),
       seq(
         'select',
-        field('variable', $.variable_name),
-        optional(seq(
-          choice('in', '('),
-          repeat($._word),
-          optional(')'),
-        )),
+        $._loop_word_list,
         $.block,
       ),
     ),
@@ -930,10 +922,7 @@ module.exports = grammar({
 
     bang: _ => token(prec(4, '!')),
 
-    _statement_body: $ => repeat1(choice(
-      $.terminated_statement,
-      $.list,
-    )),
+    _statement_body: $ => repeat1($._statement),
 
     _do: $ => choice(
       'do',
