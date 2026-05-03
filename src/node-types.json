@@ -979,6 +979,10 @@
       "required": true,
       "types": [
         {
+          "type": "block",
+          "named": true
+        },
+        {
           "type": "elif_clause",
           "named": true
         },
@@ -988,6 +992,14 @@
         },
         {
           "type": "list",
+          "named": true
+        },
+        {
+          "type": "short_elif_clause",
+          "named": true
+        },
+        {
+          "type": "short_else_clause",
           "named": true
         },
         {
@@ -1117,6 +1129,11 @@
     "fields": {}
   },
   {
+    "type": "parameter_operator",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "parameter_slice",
     "named": true,
     "fields": {},
@@ -1235,6 +1252,10 @@
           "named": true
         },
         {
+          "type": "timed_command",
+          "named": true
+        },
+        {
           "type": "until_statement",
           "named": true
         },
@@ -1283,6 +1304,10 @@
         },
         {
           "type": "arithmetic_expansion",
+          "named": true
+        },
+        {
+          "type": "brace_descriptor",
           "named": true
         },
         {
@@ -1454,6 +1479,10 @@
           "named": true
         },
         {
+          "type": "timed_command",
+          "named": true
+        },
+        {
           "type": "until_statement",
           "named": true
         },
@@ -1549,6 +1578,40 @@
         },
         {
           "type": "word",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "short_elif_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "block",
+          "named": true
+        },
+        {
+          "type": "list",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "short_else_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "block",
           "named": true
         }
       ]
@@ -1901,6 +1964,85 @@
     }
   },
   {
+    "type": "timed_command",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "arithmetic_command",
+          "named": true
+        },
+        {
+          "type": "block",
+          "named": true
+        },
+        {
+          "type": "case_statement",
+          "named": true
+        },
+        {
+          "type": "conditional_command",
+          "named": true
+        },
+        {
+          "type": "for_statement",
+          "named": true
+        },
+        {
+          "type": "foreach_statement",
+          "named": true
+        },
+        {
+          "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "if_statement",
+          "named": true
+        },
+        {
+          "type": "redirect",
+          "named": true
+        },
+        {
+          "type": "repeat_statement",
+          "named": true
+        },
+        {
+          "type": "select_statement",
+          "named": true
+        },
+        {
+          "type": "simple_command",
+          "named": true
+        },
+        {
+          "type": "subshell",
+          "named": true
+        },
+        {
+          "type": "test_command",
+          "named": true
+        },
+        {
+          "type": "timed_command",
+          "named": true
+        },
+        {
+          "type": "until_statement",
+          "named": true
+        },
+        {
+          "type": "while_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "until_statement",
     "named": true,
     "fields": {},
@@ -1908,6 +2050,10 @@
       "multiple": true,
       "required": true,
       "types": [
+        {
+          "type": "block",
+          "named": true
+        },
         {
           "type": "list",
           "named": true
@@ -2014,6 +2160,10 @@
     "named": false
   },
   {
+    "type": "+",
+    "named": false
+  },
+  {
     "type": "/",
     "named": false
   },
@@ -2067,6 +2217,10 @@
   },
   {
     "type": "bang",
+    "named": true
+  },
+  {
+    "type": "brace_descriptor",
     "named": true
   },
   {
@@ -2175,10 +2329,6 @@
     "named": true
   },
   {
-    "type": "parameter_operator",
-    "named": true
-  },
-  {
     "type": "parameter_subscript",
     "named": true
   },
@@ -2200,6 +2350,10 @@
   },
   {
     "type": "then",
+    "named": false
+  },
+  {
+    "type": "time",
     "named": false
   },
   {
