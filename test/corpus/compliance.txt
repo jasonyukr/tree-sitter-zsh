@@ -129,6 +129,31 @@ EOF
       (heredoc_end))))
 
 ==================
+Heredoc word delimiter
+==================
+
+cat <<EOF-1
+body
+EOF-1
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (redirect
+            (redirect_operator)
+            (heredoc_start)))))
+    (heredoc_body
+      (heredoc_content)
+      (heredoc_end))))
+
+==================
 Arithmetic commands and expansions
 ==================
 
@@ -311,6 +336,64 @@ print ${${nested:-fallback}#fall}
               (variable_name)
               (parameter_operator)
               (word))
+            (parameter_operator)
+            (word)))))))
+
+==================
+Zsh 5.9 parameter operators
+==================
+
+print ${+name}
+print ${var::=default} ${var:#pat}
+print ${var:|ary} ${var:*ary} ${var:^ary} ${var:^^ary}
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            (parameter_operator)
+            (variable_name))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            parameter: (variable_name)
+            (parameter_operator)
+            (word))
+          (parameter_expansion
+            parameter: (variable_name)
+            (parameter_operator)
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            parameter: (variable_name)
+            (parameter_operator)
+            (word))
+          (parameter_expansion
+            parameter: (variable_name)
+            (parameter_operator)
+            (word))
+          (parameter_expansion
+            parameter: (variable_name)
+            (parameter_operator)
+            (word))
+          (parameter_expansion
+            parameter: (variable_name)
             (parameter_operator)
             (word)))))))
 

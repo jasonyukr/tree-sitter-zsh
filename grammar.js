@@ -98,6 +98,7 @@ module.exports = grammar({
     )),
 
     _command: $ => choice(
+      $.timed_command,
       $.if_statement,
       $.conditional_command,
       $.test_command,
@@ -115,6 +116,11 @@ module.exports = grammar({
       $.block,
       $.simple_command,
     ),
+
+    timed_command: $ => prec.right(PREC.command + 2, seq(
+      'time',
+      $._command,
+    )),
 
     simple_command: $ => prec.right(PREC.command, choice(
       seq(
@@ -178,7 +184,7 @@ module.exports = grammar({
       $._herestring_redirect,
       $._heredoc_redirect,
       seq(
-        optional(/[0-9]+/),
+        optional(choice(/[0-9]+/, $.brace_descriptor)),
         $.redirect_operator,
         optional(choice(alias(token.immediate(/[0-9]+/), $.word), $._word)),
       ),
@@ -194,7 +200,7 @@ module.exports = grammar({
     _heredoc_strip_operator: _ => token(prec(3, '<<-')),
 
     _herestring_redirect: $ => seq(
-      optional(/[0-9]+/),
+      optional(choice(/[0-9]+/, $.brace_descriptor)),
       alias($.herestring_operator, $.redirect_operator),
       choice(alias(token.immediate(/[0-9]+/), $.word), $._word),
     ),
@@ -203,12 +209,12 @@ module.exports = grammar({
 
     _heredoc_redirect: $ => choice(
       seq(
-        optional(/[0-9]+/),
+        optional(choice(/[0-9]+/, $.brace_descriptor)),
         alias($.heredoc_operator, $.redirect_operator),
         $.heredoc_start,
       ),
       seq(
-        optional(/[0-9]+/),
+        optional(choice(/[0-9]+/, $.brace_descriptor)),
         alias($._heredoc_strip_operator, $.redirect_operator),
         alias($._heredoc_strip_start, $.heredoc_start),
       ),
@@ -227,14 +233,23 @@ module.exports = grammar({
       'builtin',
     ),
 
-    if_statement: $ => seq(
-      'if',
-      $._statement_body,
-      'then',
-      repeat($._statement),
-      repeat($.elif_clause),
-      optional($.else_clause),
-      'fi',
+    if_statement: $ => choice(
+      seq(
+        'if',
+        $._statement_body,
+        'then',
+        repeat($._statement),
+        repeat($.elif_clause),
+        optional($.else_clause),
+        'fi',
+      ),
+      prec.right(1, seq(
+        'if',
+        $.list,
+        $.block,
+        repeat($.short_elif_clause),
+        optional($.short_else_clause),
+      )),
     ),
 
     elif_clause: $ => seq(
@@ -247,6 +262,17 @@ module.exports = grammar({
     else_clause: $ => seq(
       'else',
       repeat($._statement),
+    ),
+
+    short_elif_clause: $ => seq(
+      'elif',
+      $.list,
+      $.block,
+    ),
+
+    short_else_clause: $ => seq(
+      'else',
+      $.block,
     ),
 
     for_statement: $ => choice(
@@ -306,12 +332,19 @@ module.exports = grammar({
       )),
     ),
 
-    until_statement: $ => seq(
-      'until',
-      $._statement_body,
-      'do',
-      repeat($._statement),
-      'done',
+    until_statement: $ => choice(
+      seq(
+        'until',
+        $._statement_body,
+        'do',
+        repeat($._statement),
+        'done',
+      ),
+      prec(1, seq(
+        'until',
+        $.list,
+        $.block,
+      )),
     ),
 
     case_statement: $ => choice(
@@ -336,6 +369,13 @@ module.exports = grammar({
           repeat($._case_separator),
         )),
         'esac',
+      ),
+      seq(
+        'case',
+        $._word,
+        '{',
+        repeat(choice($.case_item, $._case_separator)),
+        '}',
       ),
     ),
 
@@ -674,6 +714,7 @@ module.exports = grammar({
         '${',
         $.parameter_flags,
         choice(
+          $._parameter_presence_operation,
           $._parameter_operation,
           $._parameter_default,
           $._parameter_body,
@@ -683,6 +724,7 @@ module.exports = grammar({
       seq(
         '${',
         choice(
+          $._parameter_presence_operation,
           $._parameter_operation,
           $._parameter_body,
         ),
@@ -716,6 +758,11 @@ module.exports = grammar({
       ),
     ),
 
+    _parameter_presence_operation: $ => seq(
+      alias($._parameter_presence_operator, $.parameter_operator),
+      $._parameter_body,
+    ),
+
     _parameter_default: $ => seq(
       $.parameter_operator,
       repeat($._parameter_part),
@@ -742,7 +789,9 @@ module.exports = grammar({
       optional(seq(':', optional(alias($._parameter_slice_part, $.word)))),
     )),
 
-    parameter_operator: _ => token.immediate(choice(':-', ':=', ':?', ':+', '-', '=', '?', '+')),
+    parameter_operator: _ => token.immediate(choice('::=', ':^^', ':-', ':=', ':?', ':+', ':#', ':|', ':*', ':^', '-', '=', '?', '+')),
+
+    _parameter_presence_operator: _ => token.immediate('+'),
 
     _parameter_removal_operator: _ => token.immediate(choice('##', '%%', '#', '%')),
 
@@ -817,6 +866,8 @@ module.exports = grammar({
     _command_assignment_word: _ => token(prec(1, /[A-Za-z0-9_.+@%/]*-[A-Za-z0-9_.+@%/-]*=[^\s'"`$\\;|&<>(){}=>]+/)),
 
     special_parameter: _ => token.immediate(/[0-9#?@$!*_-]/),
+
+    brace_descriptor: _ => token(prec(2, seq('{', /[A-Za-z_][A-Za-z0-9_]*/, '}'))),
 
     glob_pattern: $ => seq(
       field('pattern', alias(choice(

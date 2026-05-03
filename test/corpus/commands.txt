@@ -219,6 +219,66 @@ exec 3>&1
             (word)))))))
 
 ==================
+Timed command and brace descriptor redirect
+==================
+
+time echo hi
+time { echo hi }
+time if true; then echo yes; fi
+exec {fd}>out
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (timed_command
+          (simple_command
+            (command_name
+              (word))
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (timed_command
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (timed_command
+          (if_statement
+            (terminated_statement
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))))))
+            (terminated_statement
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (word))))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (precommand)
+          (redirect
+            (brace_descriptor)
+            (redirect_operator)
+            (word)))))))
+
+==================
 Digit command words and trailing background
 ==================
 

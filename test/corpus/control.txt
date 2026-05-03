@@ -966,6 +966,165 @@ esac
                   (word))))))))))
 
 ==================
+Alternate brace control forms
+==================
+
+if [[ -n $x ]] { print $x } else { print z }
+until [[ -n $x ]] { print wait }
+case $x { (foo) print ok ;; }
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (if_statement
+          (list
+            (pipeline
+              (conditional_command
+                (conditional_expression
+                  (test_unary_expression
+                    (test_operator)
+                    (variable_expansion
+                      (variable_name)))))))
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (variable_expansion
+                    (variable_name))))))
+          (short_else_clause
+            (block
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (word))))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (until_statement
+          (list
+            (pipeline
+              (conditional_command
+                (conditional_expression
+                  (test_unary_expression
+                    (test_operator)
+                    (variable_expansion
+                      (variable_name)))))))
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (case_statement
+          (variable_expansion
+            (variable_name))
+          (case_item
+            (case_pattern
+              (case_pattern_word
+                (word)))
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word))))))))))
+
+==================
+Alternate brace branches
+==================
+
+if [[ -n $x ]] { print $x } elif [[ -n $y ]] { print $y } else { print z }
+case $x { (foo) print ok ;; (bar) print no ;; }
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (if_statement
+          (list
+            (pipeline
+              (conditional_command
+                (conditional_expression
+                  (test_unary_expression
+                    (test_operator)
+                    (variable_expansion
+                      (variable_name)))))))
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (variable_expansion
+                    (variable_name))))))
+          (short_elif_clause
+            (list
+              (pipeline
+                (conditional_command
+                  (conditional_expression
+                    (test_unary_expression
+                      (test_operator)
+                      (variable_expansion
+                        (variable_name)))))))
+            (block
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (variable_expansion
+                      (variable_name)))))))
+          (short_else_clause
+            (block
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (word))))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (case_statement
+          (variable_expansion
+            (variable_name))
+          (case_item
+            (case_pattern
+              (case_pattern_word
+                (word)))
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))
+          (case_item
+            (case_pattern
+              (case_pattern_word
+                (word)))
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word))))))))))
+
+==================
 Case statement with test command
 ==================
 

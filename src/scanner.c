@@ -26,12 +26,10 @@ typedef struct {
   uint8_t count;
 } Scanner;
 
-static bool is_word_start(int32_t c) {
-  return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_';
-}
-
-static bool is_word_char(int32_t c) {
-  return is_word_start(c) || (c >= '0' && c <= '9');
+static bool is_heredoc_delimiter_char(int32_t c) {
+  return c != '\0' && c != '\n' && c != '\r' && c != ' ' && c != '\t' &&
+    c != ';' && c != '|' && c != '&' && c != '<' && c != '>' &&
+    c != '(' && c != ')';
 }
 
 static void advance(TSLexer *lexer) {
@@ -77,7 +75,7 @@ static bool scan_heredoc_start(Scanner *scanner, TSLexer *lexer, bool strip_tabs
     }
     advance(lexer);
   } else {
-    if (!is_word_start(lexer->lookahead)) {
+    if (!is_heredoc_delimiter_char(lexer->lookahead)) {
       return false;
     }
     do {
@@ -86,7 +84,7 @@ static bool scan_heredoc_start(Scanner *scanner, TSLexer *lexer, bool strip_tabs
       }
       delimiter[length++] = (char)lexer->lookahead;
       advance(lexer);
-    } while (is_word_char(lexer->lookahead));
+    } while (is_heredoc_delimiter_char(lexer->lookahead));
   }
 
   if (!push_heredoc(scanner, delimiter, length, strip_tabs)) {
