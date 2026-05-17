@@ -166,7 +166,7 @@ module.exports = grammar({
       optional(choice($.array_assignment, alias($._assignment_brace_value, $.word), alias(token.immediate(/[0-9]+/), $.word), $._word)),
     )),
 
-    _assignment_brace_value: _ => token.immediate(prec(2, /\$\{[^}\n]+\}[^\s'"`$\\;|&<>(){}=>]*\$\{[^}\n]+\}\}/)),
+    _assignment_brace_value: _ => token.immediate(prec(2, /\$\{[^}\n]+\}[^\s'"`$\\;|&<>(){}=>]*\$\{[^}\n]+\}\}?/)),
 
     array_assignment: $ => seq(
       token.immediate('('),
@@ -684,6 +684,7 @@ module.exports = grammar({
     _conditional_operand: $ => choice(
       alias($._dollar_terminated_double_quoted_string, $.double_quoted_string),
       alias($.conditional_quoted_word, $.word),
+      alias($.conditional_single_quoted_word, $.word),
       $.double_quoted_string,
       $.single_quoted_string,
       $.ansi_c_string,
@@ -700,6 +701,11 @@ module.exports = grammar({
     conditional_word: _ => token(prec(2, /[^\s'"`$;&|<>(){}\]]+/)),
 
     conditional_quoted_word: _ => token(prec(10, /[^\s'"`$;&|<>(){}\]]*"[^"\\$`\n]*"[^\s'"`$;&|<>(){}\]]*/)),
+
+    conditional_single_quoted_word: _ => token(prec(10, choice(
+      /[^\s'"`$;&|<>(){}\]]+'[^'\n]*'[^\s'"`$;&|<>(){}\]]*/,
+      /[^\s'"`$;&|<>(){}\]]*'[^'\n]*'[^\s'"`$;&|<>(){}\]]+/,
+    ))),
 
     parameter_expansion: $ => choice(
       seq(

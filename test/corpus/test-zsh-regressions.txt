@@ -1,0 +1,49 @@
+==================
+Test zsh regressions
+==================
+
+[[ $word == *'$('* ]] && continue
+[[ $word == *'`'* ]] && continue
+expanded=${HOME}${token#\~}
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (conditional_command
+          (conditional_expression
+            (test_binary_expression
+              (variable_expansion
+                (variable_name))
+              (test_operator)
+              (word)))))
+      (list_operator)
+      (pipeline
+        (simple_command
+          (command_name
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (conditional_command
+          (conditional_expression
+            (test_binary_expression
+              (variable_expansion
+                (variable_name))
+              (test_operator)
+              (word)))))
+      (list_operator)
+      (pipeline
+        (simple_command
+          (command_name
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            (variable_name)
+            (word)))))))
