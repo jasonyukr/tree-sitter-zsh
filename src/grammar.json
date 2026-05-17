@@ -664,7 +664,7 @@
         "value": 2,
         "content": {
           "type": "PATTERN",
-          "value": "\\$\\{[^}\\n]+\\}[^\\s'\"`$\\\\;|&<>(){}=>]*\\$\\{[^}\\n]+\\}\\}"
+          "value": "\\$\\{[^}\\n]+\\}[^\\s'\"`$\\\\;|&<>(){}=>]*\\$\\{[^}\\n]+\\}\\}?"
         }
       }
     },
@@ -3673,6 +3673,15 @@
           "value": "word"
         },
         {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "conditional_single_quoted_word"
+          },
+          "named": true,
+          "value": "word"
+        },
+        {
           "type": "SYMBOL",
           "name": "double_quoted_string"
         },
@@ -3754,6 +3763,26 @@
         "content": {
           "type": "PATTERN",
           "value": "[^\\s'\"`$;&|<>(){}\\]]*\"[^\"\\\\$`\\n]*\"[^\\s'\"`$;&|<>(){}\\]]*"
+        }
+      }
+    },
+    "conditional_single_quoted_word": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 10,
+        "content": {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "PATTERN",
+              "value": "[^\\s'\"`$;&|<>(){}\\]]+'[^'\\n]*'[^\\s'\"`$;&|<>(){}\\]]*"
+            },
+            {
+              "type": "PATTERN",
+              "value": "[^\\s'\"`$;&|<>(){}\\]]*'[^'\\n]*'[^\\s'\"`$;&|<>(){}\\]]+"
+            }
+          ]
         }
       }
     },
