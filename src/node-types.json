@@ -1,5 +1,20 @@
 [
   {
+    "type": "always_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "block",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "ansi_c_string",
     "named": true,
     "fields": {},
@@ -680,7 +695,7 @@
     "named": true,
     "fields": {
       "variable": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
@@ -786,6 +801,10 @@
         },
         {
           "type": "arithmetic_expansion",
+          "named": true
+        },
+        {
+          "type": "block",
           "named": true
         },
         {
@@ -1192,6 +1211,10 @@
       "required": true,
       "types": [
         {
+          "type": "always_statement",
+          "named": true
+        },
+        {
           "type": "arithmetic_command",
           "named": true
         },
@@ -1375,6 +1398,10 @@
       "required": true,
       "types": [
         {
+          "type": "always_statement",
+          "named": true
+        },
+        {
           "type": "ansi_c_string",
           "named": true
         },
@@ -1506,7 +1533,7 @@
     "named": true,
     "fields": {
       "variable": {
-        "multiple": false,
+        "multiple": true,
         "required": true,
         "types": [
           {
@@ -1969,8 +1996,12 @@
     "fields": {},
     "children": {
       "multiple": true,
-      "required": true,
+      "required": false,
       "types": [
+        {
+          "type": "always_statement",
+          "named": true
+        },
         {
           "type": "arithmetic_command",
           "named": true
@@ -2209,6 +2240,10 @@
   },
   {
     "type": "`",
+    "named": false
+  },
+  {
+    "type": "always",
     "named": false
   },
   {
