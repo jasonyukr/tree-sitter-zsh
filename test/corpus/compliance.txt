@@ -200,6 +200,8 @@ Conditional expressions
 ==================
 
 [[ -n $name && $file == *.zsh ]]
+[[ -v path[1] && -n ${name:-default} ]]
+[[ $file == (#i)*.zsh ]]
 
 ---
 
@@ -215,6 +217,31 @@ Conditional expressions
               (variable_expansion
                 (variable_name)))
             (conditional_operator)
+            (test_binary_expression
+              (variable_expansion
+                (variable_name))
+              (test_operator)
+              (word)))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (conditional_command
+          (conditional_expression
+            (test_unary_expression
+              (test_operator)
+              (word))
+            (conditional_operator)
+            (test_unary_expression
+              (test_operator)
+              (parameter_expansion
+                parameter: (variable_name)
+                (parameter_operator)
+                (word))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (conditional_command
+          (conditional_expression
             (test_binary_expression
               (variable_expansion
                 (variable_name))
@@ -402,6 +429,7 @@ Parameter substitution variants
 ==================
 
 print ${var//pat/repl} ${var/#pat/repl} ${var/%pat/repl}
+print ${var//(#m)[[:alpha:]]/${MATCH:l}}
 
 ---
 
@@ -427,7 +455,22 @@ print ${var//pat/repl} ${var/#pat/repl} ${var/%pat/repl}
             parameter: (variable_name)
             (parameter_substitution
               (word)
-              (word))))))))
+              (word)))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            parameter: (variable_name)
+            (parameter_substitution
+              (word)
+              (word)
+              (parameter_expansion
+                parameter: (variable_name)
+                (parameter_slice
+                  (word))))))))))
 
 ==================
 Tranche 5 flag-only parameter expansions
