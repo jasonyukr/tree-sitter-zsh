@@ -79,6 +79,27 @@ coproc cat
             (word)))))))
 
 ==================
+Coproc block
+==================
+
+coproc { cat }
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (coproc_statement
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word)))))))))))
+
+==================
 Nocorrect precommand
 ==================
 
@@ -96,6 +117,26 @@ nocorrect git status
           (command_name
             (word))
           (word))))))
+
+==================
+Noglob precommand
+==================
+
+noglob print *.zsh
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (precommand)
+          (command_name
+            (word))
+          (glob_pattern
+            pattern: (word)))))))
 
 ==================
 Parameter flags and command substitution

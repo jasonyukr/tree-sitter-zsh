@@ -14,6 +14,8 @@ select x in a b; { print $x; break }
 
 coproc cat |& sed 's/x/y/'
 
+coproc { cat }
+
 noglob print *.zsh
 
 - echo login-shell-command

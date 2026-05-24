@@ -116,6 +116,7 @@ module.exports = grammar({
       $._redirected_command,
       $.subshell,
       $.block,
+      $.coproc_statement,
       $.simple_command,
     ),
 
@@ -229,11 +230,17 @@ module.exports = grammar({
 
     precommand: _ => choice(
       'nocorrect',
+      'noglob',
       'coproc',
       'command',
       'exec',
       'builtin',
     ),
+
+    coproc_statement: $ => prec(PREC.command + 1, seq(
+      'coproc',
+      choice($.block, $.subshell),
+    )),
 
     if_statement: $ => choice(
       seq(
