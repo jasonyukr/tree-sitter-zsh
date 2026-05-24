@@ -622,6 +622,25 @@
     "fields": {}
   },
   {
+    "type": "coproc_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "block",
+          "named": true
+        },
+        {
+          "type": "subshell",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "double_quoted_string",
     "named": true,
     "fields": {},
@@ -1235,6 +1254,10 @@
           "named": true
         },
         {
+          "type": "coproc_statement",
+          "named": true
+        },
+        {
           "type": "for_statement",
           "named": true
         },
@@ -1427,6 +1450,10 @@
         },
         {
           "type": "conditional_command",
+          "named": true
+        },
+        {
+          "type": "coproc_statement",
           "named": true
         },
         {
@@ -2019,6 +2046,10 @@
           "named": true
         },
         {
+          "type": "coproc_statement",
+          "named": true
+        },
+        {
           "type": "for_statement",
           "named": true
         },
@@ -2357,6 +2388,10 @@
   },
   {
     "type": "nocorrect",
+    "named": false
+  },
+  {
+    "type": "noglob",
     "named": false
   },
   {

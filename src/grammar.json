@@ -291,6 +291,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "coproc_statement"
+        },
+        {
+          "type": "SYMBOL",
           "name": "simple_command"
         }
       ]
@@ -1357,6 +1361,10 @@
         },
         {
           "type": "STRING",
+          "value": "noglob"
+        },
+        {
+          "type": "STRING",
           "value": "coproc"
         },
         {
@@ -1372,6 +1380,32 @@
           "value": "builtin"
         }
       ]
+    },
+    "coproc_statement": {
+      "type": "PREC",
+      "value": 4,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "coproc"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "block"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "subshell"
+              }
+            ]
+          }
+        ]
+      }
     },
     "if_statement": {
       "type": "CHOICE",
