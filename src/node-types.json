@@ -437,7 +437,18 @@
   {
     "type": "command_substitution",
     "named": true,
-    "fields": {},
+    "fields": {
+      "parameter": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "variable_name",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": false,
@@ -2129,6 +2140,14 @@
   },
   {
     "type": "${",
+    "named": false
+  },
+  {
+    "type": "${{",
+    "named": false
+  },
+  {
+    "type": "${|",
     "named": false
   },
   {
