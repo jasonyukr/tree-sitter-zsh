@@ -86,6 +86,10 @@ Parameter flags and command substitution
 ==================
 
 print ${(@f)$(cmd)}
+print ${ print hi }
+print ${| REPLY=hi }
+print ${{out} print hi }
+print ${(!)ref}
 
 ---
 
@@ -104,7 +108,56 @@ print ${(@f)$(cmd)}
                 (pipeline
                   (simple_command
                     (command_name
-                      (word))))))))))))
+                      (word)))))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (command_substitution
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (command_substitution
+            (list
+              (pipeline
+                (simple_command
+                  (assignment
+                    name: (variable_name)
+                    (word))))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (command_substitution
+            parameter: (variable_name)
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            (parameter_flags)
+            (variable_name)))))))
 
 ==================
 Process substitution

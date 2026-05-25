@@ -226,6 +226,7 @@ time echo hi
 time { echo hi }
 time if true; then echo yes; fi
 exec {fd}>out
+time foo=bar
 
 ---
 
@@ -276,7 +277,15 @@ exec {fd}>out
           (redirect
             (brace_descriptor)
             (redirect_operator)
-            (word)))))))
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (timed_command
+          (simple_command
+            (assignment
+              name: (variable_name)
+              (word))))))))
 
 ==================
 Digit command words and trailing background

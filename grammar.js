@@ -563,6 +563,9 @@ module.exports = grammar({
       prec(4, seq('$(', repeat($.list), alias($._heredoc_redirect, $.redirect), $._terminator, $.heredoc_body, ')')),
       prec(3, seq('$(', alias($._heredoc_list, $.list), $._terminator, $.heredoc_body, ')')),
       seq('$(', repeat($._statement), ')'),
+      prec(1, seq('${|', repeat($.list), '}')),
+      prec(1, seq('${{', field('parameter', $.variable_name), '}', repeat($.list), '}')),
+      prec(1, seq('${', token.immediate(/[ \t]+/), repeat($.list), '}')),
       seq('`', repeat(choice(token.immediate(/[^`\\]+/), $.escape_sequence)), '`'),
     ),
 
@@ -708,7 +711,7 @@ module.exports = grammar({
     ))),
 
     parameter_expansion: $ => choice(
-      seq(
+      prec(2, seq(
         '${',
         $.parameter_flags,
         choice(
@@ -718,7 +721,7 @@ module.exports = grammar({
           $._parameter_body,
         ),
         '}',
-      ),
+      )),
       seq(
         '${',
         choice(
