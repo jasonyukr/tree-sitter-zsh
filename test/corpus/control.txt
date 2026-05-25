@@ -107,6 +107,10 @@ Short loop and select forms
 while [[ -n $x ]] { print $x }
 for x (a b) { print $x }
 select x (a b) { print $x }
+for x in a b; { print $x }
+for ((i=0; i<2; i++)) { print $i }
+select x in a b; { print $x; break }
+for x y in a b c d; do print $x $y; done
 
 ---
 
@@ -161,7 +165,83 @@ select x (a b) { print $x }
                   (command_name
                     (word))
                   (variable_expansion
-                    (variable_name)))))))))))
+                    (variable_name))))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (for_statement
+          variable: (variable_name)
+          (word)
+          (word)
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (variable_expansion
+                    (variable_name))))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (for_statement
+          (c_style_for_clause
+            (arithmetic_expression)
+            (arithmetic_expression)
+            (arithmetic_expression))
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (variable_expansion
+                    (variable_name))))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (select_statement
+          variable: (variable_name)
+          (word)
+          (word)
+          (block
+            (terminated_statement
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (variable_expansion
+                      (variable_name))))))
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (for_statement
+          variable: (variable_name)
+          variable: (variable_name)
+          (word)
+          (word)
+          (word)
+          (word)
+          (list
+            (pipeline
+              (simple_command
+                (command_name
+                  (word))
+                (variable_expansion
+                  (variable_name)))))
+          (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (variable_expansion
+                      (variable_name))))))))))))
 
 ==================
 Tranche 2 arithmetic and conditional negation
@@ -931,6 +1011,7 @@ case $x in
   a) echo alpha ;;
   b|c) echo beta ;;
 esac
+case $x in (a|b) print ab ;; (c) print c ;& (*) print star ;| esac
 
 ---
 
@@ -963,6 +1044,44 @@ esac
                 (simple_command
                   (command_name
                     (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (case_statement
+          (variable_expansion
+            (variable_name))
+          (case_item
+            (case_pattern
+              (case_pattern_word
+                (word))
+              (case_pattern_word
+                (word)))
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))
+          (case_item
+            (case_pattern
+              (case_pattern_word
+                (word)))
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))
+          (case_item
+            (case_pattern
+              (case_pattern_word
+                (word)))
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
                   (word))))))))))
 
 ==================
@@ -972,6 +1091,7 @@ Alternate brace control forms
 if [[ -n $x ]] { print $x } else { print z }
 until [[ -n $x ]] { print wait }
 case $x { (foo) print ok ;; }
+{ print try } always { print always }
 
 ---
 
@@ -1034,6 +1154,24 @@ case $x { (foo) print ok ;; }
             (case_pattern
               (case_pattern_word
                 (word)))
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (always_statement
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))
+          (block
             (list
               (pipeline
                 (simple_command

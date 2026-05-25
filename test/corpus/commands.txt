@@ -225,6 +225,7 @@ Timed command and brace descriptor redirect
 time echo hi
 time { echo hi }
 time if true; then echo yes; fi
+time
 exec {fd}>out
 time foo=bar
 
@@ -269,6 +270,10 @@ time foo=bar
                     (command_name
                       (word))
                     (word))))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (timed_command))))
   (terminated_statement
     (list
       (pipeline

@@ -19,7 +19,8 @@
   ],
   "scripts": {
     "generate": "tree-sitter generate",
-    "test": "tree-sitter test"
+    "test": "tree-sitter test",
+    "test:spec-smoke": "sh scripts/spec-smoke.sh"
   },
   "devDependencies": {
     "tree-sitter-cli": "^0.26.8"

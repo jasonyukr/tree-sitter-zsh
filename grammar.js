@@ -56,6 +56,7 @@ module.exports = grammar({
     [$.command_substitution, $._statement],
     [$._parameter_body, $._parameter_operation],
     [$.function_definition, $._redirected_command],
+    [$.command_name, $._command_part],
   ],
 
   rules: {
@@ -106,6 +107,7 @@ module.exports = grammar({
       $.while_statement,
       $.until_statement,
       $.case_statement,
+      $.always_statement,
       $.select_statement,
       $.repeat_statement,
       $.foreach_statement,
@@ -114,12 +116,13 @@ module.exports = grammar({
       $._redirected_command,
       $.subshell,
       $.block,
+      $.coproc_statement,
       $.simple_command,
     ),
 
     timed_command: $ => prec.right(PREC.command + 2, seq(
       'time',
-      $._command,
+      optional($._command),
     )),
 
     simple_command: $ => prec.right(PREC.command, choice(
@@ -227,11 +230,17 @@ module.exports = grammar({
 
     precommand: _ => choice(
       'nocorrect',
+      'noglob',
       'coproc',
       'command',
       'exec',
       'builtin',
     ),
+
+    coproc_statement: $ => prec(PREC.command + 1, seq(
+      'coproc',
+      choice($.block, $.subshell),
+    )),
 
     if_statement: $ => choice(
       seq(
@@ -293,12 +302,20 @@ module.exports = grammar({
       seq(
         'for',
         $._loop_word_list,
+        optional($._terminator),
+        $.block,
+      ),
+      seq(
+        'for',
+        $.c_style_for_clause,
+        optional($._terminator),
         $.block,
       ),
     ),
 
     _loop_word_list: $ => seq(
       field('variable', $.variable_name),
+      repeat(field('variable', $.variable_name)),
       optional(seq(
         choice('in', '('),
         repeat($._word),
@@ -346,6 +363,18 @@ module.exports = grammar({
       )),
     ),
 
+    always_statement: $ => prec.right(PREC.command + 1, seq(
+      alias($._always_block, $.block),
+      'always',
+      alias($._always_block, $.block),
+    )),
+
+    _always_block: $ => seq(
+      '{',
+      repeat($._statement),
+      '}',
+    ),
+
     case_statement: $ => choice(
       prec(3, seq(
         'case',
@@ -364,7 +393,7 @@ module.exports = grammar({
         repeat($._case_separator),
         optional(seq(
           $.case_item,
-          repeat(seq(repeat1($._case_separator), $.case_item)),
+          repeat(seq(repeat($._case_separator), $.case_item)),
           repeat($._case_separator),
         )),
         'esac',
@@ -467,6 +496,14 @@ module.exports = grammar({
       ),
       seq(
         'select',
+        field('variable', $.variable_name),
+        'in',
+        repeat($._word),
+        $._terminator,
+        $.block,
+      ),
+      seq(
+        'select',
         $._loop_word_list,
         $.block,
       ),
@@ -481,13 +518,22 @@ module.exports = grammar({
       ),
     ),
 
-    foreach_statement: $ => prec(2, seq(
-      'foreach',
-      field('variable', $.variable_name),
-      optional(seq('(', repeat($._word), ')')),
-      optional($._terminator),
-      repeat($._statement),
-      'end',
+    foreach_statement: $ => prec(2, choice(
+      seq(
+        'foreach',
+        field('variable', $.variable_name),
+        optional(seq('(', repeat($._word), ')')),
+        optional($._terminator),
+        repeat($._statement),
+        'end',
+      ),
+      seq(
+        'foreach',
+        field('variable', $.variable_name),
+        optional(seq('(', repeat($._word), ')')),
+        optional($._terminator),
+        $.block,
+      ),
     )),
 
     function_definition: $ => prec.right(PREC.command + 1, choice(
@@ -514,6 +560,20 @@ module.exports = grammar({
         'function',
         choice($.block, $.subshell),
         repeat(choice($._command_part, $.redirect)),
+      ),
+      prec(PREC.command + 2, seq(
+        field('name', $.command_name),
+        repeat1(field('name', $.command_name)),
+        '(',
+        ')',
+        choice($.block, $.subshell),
+      )),
+      seq(
+        field('name', $.command_name),
+        repeat1(field('name', $.command_name)),
+        '(',
+        ')',
+        alias($._short_function_body, $.simple_command),
       ),
       prec(PREC.command + 2, seq(
         field('name', $.command_name),
@@ -672,6 +732,7 @@ module.exports = grammar({
       '-s',
       '-t',
       '-u',
+      '-v',
       '-w',
       '-x',
       '-z',
@@ -697,9 +758,15 @@ module.exports = grammar({
       $.variable_expansion,
       $.command_substitution,
       $.arithmetic_expansion,
+      alias($._conditional_subscript_word, $.word),
+      alias($._conditional_glob_flag_word, $.word),
       alias($.conditional_word, $.word),
       $.glob_pattern,
     ),
+
+    _conditional_subscript_word: _ => token(prec(4, /[A-Za-z_][A-Za-z0-9_]*\[[^\]\n]+\]/)),
+
+    _conditional_glob_flag_word: _ => token(prec(4, /\(#[A-Za-z]+\)[^\s'"`$;&|<>(){}\]]+/)),
 
     conditional_word: _ => token(prec(2, /[^\s'"`$;&|<>(){}\]]+/)),
 
@@ -777,10 +844,10 @@ module.exports = grammar({
     parameter_substitution: $ => prec.right(seq(
       '/',
       optional('/'),
-      repeat1(choice(alias($._parameter_substitution_part, $.word), $.escape_sequence, $.ansi_c_string, $.variable_expansion, $.parameter_expansion, $.command_substitution)),
+      repeat1(choice(alias($._parameter_substitution_glob_flag, $.word), alias($._parameter_substitution_part, $.word), $.escape_sequence, $.ansi_c_string, $.variable_expansion, $.parameter_expansion, $.command_substitution)),
       optional(seq(
         '/',
-        repeat(choice(alias($._parameter_substitution_part, $.word), $.escape_sequence, $.ansi_c_string, $.variable_expansion, $.parameter_expansion, $.command_substitution)),
+        repeat(choice(alias($._parameter_substitution_glob_flag, $.word), alias($._parameter_substitution_part, $.word), $.escape_sequence, $.ansi_c_string, $.variable_expansion, $.parameter_expansion, $.command_substitution)),
       )),
     )),
 
@@ -809,6 +876,8 @@ module.exports = grammar({
     ),
 
     _parameter_substitution_part: _ => token.immediate(/[^/}\s'"`$\\;|&<>(){}=>]+/),
+
+    _parameter_substitution_glob_flag: _ => token.immediate(prec(2, /\(#[A-Za-z]+\)/)),
 
     _parameter_slice_part: _ => token.immediate(/[^:}\s'"`$\\;|&<>(){}=>]+/),
 

@@ -23,6 +23,7 @@ Foreach statement
 ==================
 
 foreach x (a b); echo $x; end
+foreach x (a b) { print $x }
 
 ---
 
@@ -32,10 +33,25 @@ foreach x (a b); echo $x; end
     (list
       (pipeline
         (foreach_statement
-          (variable_name)
+          variable: (variable_name)
           (word)
           (word)
           (terminated_statement
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (variable_expansion
+                    (variable_name))))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (foreach_statement
+          variable: (variable_name)
+          (word)
+          (word)
+          (block
             (list
               (pipeline
                 (simple_command
@@ -63,6 +79,27 @@ coproc cat
             (word)))))))
 
 ==================
+Coproc block
+==================
+
+coproc { cat }
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (coproc_statement
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word)))))))))))
+
+==================
 Nocorrect precommand
 ==================
 
@@ -80,6 +117,26 @@ nocorrect git status
           (command_name
             (word))
           (word))))))
+
+==================
+Noglob precommand
+==================
+
+noglob print *.zsh
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (precommand)
+          (command_name
+            (word))
+          (glob_pattern
+            pattern: (word)))))))
 
 ==================
 Parameter flags and command substitution
