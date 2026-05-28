@@ -753,3 +753,41 @@ bindkey '^R' history-incremental-search-backward
             (variable_expansion
               (variable_name)))
           (word))))))
+
+==================
+Indexed array assignment elements
+==================
+
+array=([1]=first [key]=value)
+typeset -A assoc=([key]=value)
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            name: (variable_name)
+            (array_assignment
+              (array_element
+                (array_index)
+                (word))
+              (array_element
+                (array_index)
+                (word))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (word)
+          (assignment
+            name: (variable_name)
+            (array_assignment
+              (array_element
+                (array_index)
+                (word)))))))))

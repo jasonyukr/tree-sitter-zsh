@@ -242,3 +242,41 @@ foo bar () print shared
             (command_name
               (word))
             (word)))))))
+
+==================
+Function options
+==================
+
+function -T traced { print hi }
+function -- { print anon }
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          (function_option)
+          name: (command_name
+            (word))
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          (function_option)
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word))))))))))

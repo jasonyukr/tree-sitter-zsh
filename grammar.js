@@ -34,6 +34,8 @@ const REDIRECT_OPERATORS = [
   '>',
 ];
 
+const PARAMETER_NAME = /(?:[A-Za-z_][A-Za-z0-9_]*|\.[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*)/;
+
 module.exports = grammar({
   name: 'zsh',
 
@@ -173,12 +175,20 @@ module.exports = grammar({
 
     array_assignment: $ => seq(
       token.immediate('('),
-      repeat($._word),
+      repeat(choice($.array_element, $._word)),
       ')',
     ),
 
+    array_element: $ => seq(
+      $.array_index,
+      token.immediate('='),
+      choice($.array_assignment, $._word),
+    ),
+
+    array_index: _ => token(prec(5, seq('[', /[^\]\n]+/, ']'))),
+
     _assignment_name: _ => token(prec(2, seq(
-      /[A-Za-z_][A-Za-z0-9_]*/,
+      PARAMETER_NAME,
       optional(seq('[', /[^\]\n]+/, ']')),
       choice('+=', ':=', '='),
     ))),
@@ -537,6 +547,20 @@ module.exports = grammar({
     )),
 
     function_definition: $ => prec.right(PREC.command + 1, choice(
+      prec(PREC.command + 4, seq(
+        'function',
+        repeat1($.function_option),
+        field('name', $.command_name),
+        repeat(field('name', $.command_name)),
+        optional(seq('(', ')')),
+        choice($.block, $.subshell),
+      )),
+      seq(
+        'function',
+        repeat1($.function_option),
+        choice($.block, $.subshell),
+        repeat(choice($._command_part, $.redirect)),
+      ),
       prec(PREC.command + 3, seq(
         'function',
         field('name', $.command_name),
@@ -594,6 +618,8 @@ module.exports = grammar({
         repeat(choice($._command_part, $.redirect)),
       ),
     )),
+
+    function_option: _ => token(prec(2, choice('-T', '--'))),
 
     _short_function_body: $ => prec.right(PREC.command, seq(
       repeat(choice($.assignment, $.redirect)),
@@ -892,7 +918,7 @@ module.exports = grammar({
     variable_expansion: $ => seq(
       '$',
       choice(
-        $.variable_name,
+        alias($._identifier, $.variable_name),
         /[0-9#?@$!*_-]/,
       ),
     ),
@@ -983,7 +1009,9 @@ module.exports = grammar({
 
     _brace_word: _ => token(seq('{', /[^\s'"`$\\;|&<>(){}=>\x5b\x5d]+/, '}')),
 
-    variable_name: _ => /[A-Za-z_][A-Za-z0-9_]*/,
+    variable_name: _ => token(PARAMETER_NAME),
+
+    _identifier: _ => token(/[A-Za-z_][A-Za-z0-9_]*/),
 
     comment: _ => token(prec(1, seq('#', /.*/))),
 

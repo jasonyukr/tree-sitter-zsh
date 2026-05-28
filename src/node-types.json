@@ -76,6 +76,77 @@
           "named": true
         },
         {
+          "type": "array_element",
+          "named": true
+        },
+        {
+          "type": "command_substitution",
+          "named": true
+        },
+        {
+          "type": "double_quoted_string",
+          "named": true
+        },
+        {
+          "type": "escape_sequence",
+          "named": true
+        },
+        {
+          "type": "glob_pattern",
+          "named": true
+        },
+        {
+          "type": "option_word",
+          "named": true
+        },
+        {
+          "type": "parameter_expansion",
+          "named": true
+        },
+        {
+          "type": "process_substitution",
+          "named": true
+        },
+        {
+          "type": "single_quoted_string",
+          "named": true
+        },
+        {
+          "type": "variable_expansion",
+          "named": true
+        },
+        {
+          "type": "word",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "array_element",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "ansi_c_string",
+          "named": true
+        },
+        {
+          "type": "arithmetic_expansion",
+          "named": true
+        },
+        {
+          "type": "array_assignment",
+          "named": true
+        },
+        {
+          "type": "array_index",
+          "named": true
+        },
+        {
           "type": "command_substitution",
           "named": true
         },
@@ -929,6 +1000,10 @@
         },
         {
           "type": "escape_sequence",
+          "named": true
+        },
+        {
+          "type": "function_option",
           "named": true
         },
         {
@@ -2273,6 +2348,10 @@
     "named": false
   },
   {
+    "type": "=",
+    "named": false
+  },
+  {
     "type": "[",
     "named": false
   },
@@ -2298,6 +2377,10 @@
   },
   {
     "type": "arithmetic_expression",
+    "named": true
+  },
+  {
+    "type": "array_index",
     "named": true
   },
   {
@@ -2375,6 +2458,10 @@
   {
     "type": "function",
     "named": false
+  },
+  {
+    "type": "function_option",
+    "named": true
   },
   {
     "type": "glob_qualifier",
