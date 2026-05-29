@@ -2945,6 +2945,13 @@
                       "name": "subshell"
                     }
                   ]
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "redirect"
+                  }
                 }
               ]
             }
@@ -3056,6 +3063,13 @@
                       "name": "subshell"
                     }
                   ]
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "redirect"
+                  }
                 }
               ]
             }
@@ -3111,6 +3125,13 @@
                       "name": "subshell"
                     }
                   ]
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "redirect"
+                  }
                 }
               ]
             }
@@ -3245,6 +3266,13 @@
                       "name": "subshell"
                     }
                   ]
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "redirect"
+                  }
                 }
               ]
             }
@@ -3324,6 +3352,13 @@
                       "name": "subshell"
                     }
                   ]
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "redirect"
+                  }
                 }
               ]
             }
@@ -4157,6 +4192,10 @@
             },
             {
               "type": "STRING",
+              "value": "-ef"
+            },
+            {
+              "type": "STRING",
               "value": "-ne"
             },
             {
@@ -4217,7 +4256,15 @@
             },
             {
               "type": "STRING",
+              "value": "-nt"
+            },
+            {
+              "type": "STRING",
               "value": "-o"
+            },
+            {
+              "type": "STRING",
+              "value": "-ot"
             },
             {
               "type": "STRING",
@@ -4484,6 +4531,10 @@
                 "members": [
                   {
                     "type": "SYMBOL",
+                    "name": "_parameter_shorthand_flag_operation"
+                  },
+                  {
+                    "type": "SYMBOL",
                     "name": "_parameter_presence_operation"
                   },
                   {
@@ -4517,6 +4568,10 @@
             {
               "type": "CHOICE",
               "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "_parameter_shorthand_flag_operation"
+                },
                 {
                   "type": "SYMBOL",
                   "name": "_parameter_presence_operation"
@@ -4665,6 +4720,24 @@
           "content": {
             "type": "SYMBOL",
             "name": "_parameter_presence_operator"
+          },
+          "named": true,
+          "value": "parameter_operator"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_parameter_body"
+        }
+      ]
+    },
+    "_parameter_shorthand_flag_operation": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_parameter_shorthand_flag_operator"
           },
           "named": true,
           "value": "parameter_operator"
@@ -4985,6 +5058,22 @@
       "content": {
         "type": "STRING",
         "value": "+"
+      }
+    },
+    "_parameter_shorthand_flag_operator": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "~"
+          },
+          {
+            "type": "STRING",
+            "value": "^"
+          }
+        ]
       }
     },
     "_parameter_removal_operator": {
