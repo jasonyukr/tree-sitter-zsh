@@ -202,6 +202,7 @@ Conditional expressions
 [[ -n $name && $file == *.zsh ]]
 [[ -v path[1] && -n ${name:-default} ]]
 [[ $file == (#i)*.zsh ]]
+[[ a -nt b || c -ot d || e -ef f ]]
 
 ---
 
@@ -245,6 +246,25 @@ Conditional expressions
             (test_binary_expression
               (variable_expansion
                 (variable_name))
+              (test_operator)
+              (word)))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (conditional_command
+          (conditional_expression
+            (test_binary_expression
+              (word)
+              (test_operator)
+              (word))
+            (conditional_operator)
+            (test_binary_expression
+              (word)
+              (test_operator)
+              (word))
+            (conditional_operator)
+            (test_binary_expression
+              (word)
               (test_operator)
               (word))))))))
 
@@ -373,6 +393,8 @@ Zsh 5.9 parameter operators
 print ${+name}
 print ${var::=default} ${var:#pat}
 print ${var:|ary} ${var:*ary} ${var:^ary} ${var:^^ary}
+print ${~spec}
+print ${^array}
 
 ---
 
@@ -422,7 +444,25 @@ print ${var:|ary} ${var:*ary} ${var:^ary} ${var:^^ary}
           (parameter_expansion
             parameter: (variable_name)
             (parameter_operator)
-            (word)))))))
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            (parameter_operator)
+            (variable_name))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            (parameter_operator)
+            (variable_name)))))))
 
 ==================
 Parameter substitution variants

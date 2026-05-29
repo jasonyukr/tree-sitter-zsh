@@ -110,6 +110,52 @@ function { print hi; } >out
             (word)))))))
 
 ==================
+Named functions with trailing redirects
+==================
+
+fn() { print hi; } >out
+function fn { print hi; } >out
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          (command_name
+            (word))
+          (block
+            (terminated_statement
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (word))))))
+          (redirect
+            (redirect_operator)
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          (command_name
+            (word))
+          (block
+            (terminated_statement
+              (list
+                (pipeline
+                  (simple_command
+                    (command_name
+                      (word))
+                    (word))))))
+          (redirect
+            (redirect_operator)
+            (word)))))))
+
+==================
 Zsh function keyword form
 ==================
 

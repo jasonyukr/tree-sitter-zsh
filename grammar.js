@@ -554,6 +554,7 @@ module.exports = grammar({
         repeat(field('name', $.command_name)),
         optional(seq('(', ')')),
         choice($.block, $.subshell),
+        repeat($.redirect),
       )),
       seq(
         'function',
@@ -567,12 +568,14 @@ module.exports = grammar({
         repeat1(field('name', $.command_name)),
         optional(seq('(', ')')),
         choice($.block, $.subshell),
+        repeat($.redirect),
       )),
       prec(PREC.command + 2, seq(
         'function',
         field('name', $.command_name),
         optional(seq('(', ')')),
         choice($.block, $.subshell),
+        repeat($.redirect),
       )),
       seq(
         'function',
@@ -591,6 +594,7 @@ module.exports = grammar({
         '(',
         ')',
         choice($.block, $.subshell),
+        repeat($.redirect),
       )),
       seq(
         field('name', $.command_name),
@@ -604,6 +608,7 @@ module.exports = grammar({
         '(',
         ')',
         choice($.block, $.subshell),
+        repeat($.redirect),
       )),
       seq(
         field('name', $.command_name),
@@ -737,6 +742,7 @@ module.exports = grammar({
       '<=',
       '>=',
       '-eq',
+      '-ef',
       '-ne',
       '-lt',
       '-le',
@@ -752,7 +758,9 @@ module.exports = grammar({
       '-h',
       '-k',
       '-n',
+      '-nt',
       '-o',
+      '-ot',
       '-p',
       '-r',
       '-s',
@@ -808,6 +816,7 @@ module.exports = grammar({
         '${',
         $.parameter_flags,
         choice(
+          $._parameter_shorthand_flag_operation,
           $._parameter_presence_operation,
           $._parameter_operation,
           $._parameter_default,
@@ -818,6 +827,7 @@ module.exports = grammar({
       seq(
         '${',
         choice(
+          $._parameter_shorthand_flag_operation,
           $._parameter_presence_operation,
           $._parameter_operation,
           $._parameter_body,
@@ -857,6 +867,11 @@ module.exports = grammar({
       $._parameter_body,
     ),
 
+    _parameter_shorthand_flag_operation: $ => seq(
+      alias($._parameter_shorthand_flag_operator, $.parameter_operator),
+      $._parameter_body,
+    ),
+
     _parameter_default: $ => seq(
       $.parameter_operator,
       repeat($._parameter_part),
@@ -886,6 +901,8 @@ module.exports = grammar({
     parameter_operator: _ => token.immediate(choice('::=', ':^^', ':-', ':=', ':?', ':+', ':#', ':|', ':*', ':^', '-', '=', '?', '+')),
 
     _parameter_presence_operator: _ => token.immediate('+'),
+
+    _parameter_shorthand_flag_operator: _ => token.immediate(choice('~', '^')),
 
     _parameter_removal_operator: _ => token.immediate(choice('##', '%%', '#', '%')),
 
