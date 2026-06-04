@@ -295,6 +295,9 @@ Function options
 
 function -T traced { print hi }
 function -- { print anon }
+function -T { print hi }
+function -T -- -T { print hi }
+function -- -T { print hi }
 
 ---
 
@@ -319,6 +322,47 @@ function -- { print anon }
       (pipeline
         (function_definition
           (function_option)
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          (function_option)
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          (function_option)
+          (function_option)
+          name: (command_name
+            (word))
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          (function_option)
+          name: (command_name
+            (word))
           (block
             (list
               (pipeline

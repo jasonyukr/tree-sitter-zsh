@@ -270,6 +270,11 @@ Namespace parameter names
 print ${.param.name}
 .param.name=value
 typeset .param.name=value
+k.=empty
+k.2=test
+print ${k.} ${k.2}
+typeset .not.2=ok
+print ${.not.2}
 
 ---
 
@@ -298,4 +303,45 @@ typeset .param.name=value
             (word))
           (assignment
             name: (variable_name)
-            (word)))))))
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            name: (variable_name)
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (assignment
+            name: (variable_name)
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            (variable_name))
+          (parameter_expansion
+            (variable_name))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (assignment
+            name: (variable_name)
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            (variable_name)))))))

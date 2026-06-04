@@ -34,7 +34,7 @@ const REDIRECT_OPERATORS = [
   '>',
 ];
 
-const PARAMETER_NAME = /(?:[A-Za-z_][A-Za-z0-9_]*|\.[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*)/;
+const PARAMETER_NAME = /(?:[A-Za-z_][A-Za-z0-9_]*|[A-Za-z_][A-Za-z0-9_]*\.(?:[A-Za-z_][A-Za-z0-9_]*|[0-9]+)?|\.[A-Za-z_][A-Za-z0-9_]*(?:\.(?:[A-Za-z_][A-Za-z0-9_]*|[0-9]+))?)/;
 
 module.exports = grammar({
   name: 'zsh',
@@ -549,7 +549,7 @@ module.exports = grammar({
     function_definition: $ => prec.right(PREC.command + 1, choice(
       prec(PREC.command + 4, seq(
         'function',
-        repeat1($.function_option),
+        $._function_options,
         field('name', $.command_name),
         repeat(field('name', $.command_name)),
         optional(seq('(', ')')),
@@ -558,7 +558,7 @@ module.exports = grammar({
       )),
       seq(
         'function',
-        repeat1($.function_option),
+        $._function_options,
         choice($.block, $.subshell),
         repeat(choice($._command_part, $.redirect)),
       ),
@@ -624,7 +624,14 @@ module.exports = grammar({
       ),
     )),
 
-    function_option: _ => token(prec(2, choice('-T', '--'))),
+    _function_options: $ => choice(
+      repeat1($.function_option),
+      seq(repeat($.function_option), alias($._function_option_end, $.function_option)),
+    ),
+
+    function_option: _ => token(prec(2, '-T')),
+
+    _function_option_end: _ => token(prec(2, '--')),
 
     _short_function_body: $ => prec.right(PREC.command, seq(
       repeat(choice($.assignment, $.redirect)),
@@ -794,6 +801,7 @@ module.exports = grammar({
       $.arithmetic_expansion,
       alias($._conditional_subscript_word, $.word),
       alias($._conditional_glob_flag_word, $.word),
+      alias($._conditional_extglob_word, $.word),
       alias($.conditional_word, $.word),
       $.glob_pattern,
     ),
@@ -801,6 +809,8 @@ module.exports = grammar({
     _conditional_subscript_word: _ => token(prec(4, /[A-Za-z_][A-Za-z0-9_]*\[[^\]\n]+\]/)),
 
     _conditional_glob_flag_word: _ => token(prec(4, /\(#[A-Za-z]+\)[^\s'"`$;&|<>(){}\]]+/)),
+
+    _conditional_extglob_word: _ => token(prec(4, /[^\s'"`$;&<>{}\]]*[~^][^\s'"`$;&<>{}\]]*/)),
 
     conditional_word: _ => token(prec(2, /[^\s'"`$;&|<>(){}\]]+/)),
 

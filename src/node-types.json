@@ -1050,6 +1050,11 @@
     }
   },
   {
+    "type": "function_option",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "glob_pattern",
     "named": true,
     "fields": {
@@ -2320,6 +2325,10 @@
     "named": false
   },
   {
+    "type": "--",
+    "named": false
+  },
+  {
     "type": "/",
     "named": false
   },
@@ -2458,10 +2467,6 @@
   {
     "type": "function",
     "named": false
-  },
-  {
-    "type": "function_option",
-    "named": true
   },
   {
     "type": "glob_qualifier",

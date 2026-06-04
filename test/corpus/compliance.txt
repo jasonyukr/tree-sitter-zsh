@@ -203,6 +203,7 @@ Conditional expressions
 [[ -v path[1] && -n ${name:-default} ]]
 [[ $file == (#i)*.zsh ]]
 [[ a -nt b || c -ot d || e -ef f ]]
+[[ ab = (|a*)~^(*b) ]]
 
 ---
 
@@ -263,6 +264,15 @@ Conditional expressions
               (test_operator)
               (word))
             (conditional_operator)
+            (test_binary_expression
+              (word)
+              (test_operator)
+              (word)))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (conditional_command
+          (conditional_expression
             (test_binary_expression
               (word)
               (test_operator)

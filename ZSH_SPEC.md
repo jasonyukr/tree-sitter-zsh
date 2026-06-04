@@ -1,6 +1,8 @@
 # zsh Specification Baseline
 
-This repository uses the zsh 5.9 release manual as its official syntax reference baseline. zsh 5.9 is the latest official stable zsh release baseline for this parser, released 2022-05-14.
+This repository uses the zsh 5.9.1 release manual as its official stable syntax reference baseline. zsh 5.9.1 is a stable maintenance release, released 2026-05-31.
+
+The parser also carries targeted coverage for parser-visible syntax documented in upstream zsh development after 5.9 where that syntax is present in upstream manuals or tests. Runtime-only features remain outside this parser's scope.
 
 Official sources:
 
