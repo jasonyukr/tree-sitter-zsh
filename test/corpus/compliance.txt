@@ -555,9 +555,100 @@ echo "${${(%):-%N}:A:h}/move_focus_to_any_prev_window.sh"
                 (parameter_flags)
                 (parameter_operator)
                 (word))
-              (parameter_slice
-                (word)
-                (word)))))))))
+            (parameter_slice
+              (word)
+              (word)))))))))
+
+==================
+Nested parameter sample coverage
+==================
+
+print ${(*)sample/(#b)*(pat)*/${match[1]}}
+print ${${:-fallback}:l} ${${:-fallback}:u} ${${:-fallback}:C}
+print ${${(%):-%N}:A:h}
+print ${path:A:h}
+print ${var//(#m)[[:alpha:]]/${MATCH:l}}
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            (parameter_flags)
+            parameter: (variable_name)
+            (parameter_substitution
+              (word)
+              (word)
+              (parameter_expansion
+                (variable_name)
+                (parameter_subscript))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            parameter: (parameter_expansion
+              (word))
+            (parameter_slice
+              (word)))
+          (parameter_expansion
+            parameter: (parameter_expansion
+              (word))
+            (parameter_slice
+              (word)))
+          (parameter_expansion
+            parameter: (parameter_expansion
+              (word))
+            (parameter_slice
+              (word)))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            parameter: (parameter_expansion
+              (parameter_flags)
+              (parameter_operator)
+              (word))
+            (parameter_slice
+              (word)
+              (word)))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            parameter: (variable_name)
+            (parameter_slice
+              (word)
+              (word)))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            parameter: (variable_name)
+            (parameter_substitution
+              (word)
+              (word)
+              (parameter_expansion
+                parameter: (variable_name)
+                (parameter_slice
+                  (word))))))))))
 
 ==================
 Special parameter substitution and array assignment

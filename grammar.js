@@ -834,16 +834,17 @@ module.exports = grammar({
         ),
         '}',
       )),
-      seq(
+      prec(2, seq(
         '${',
         choice(
           $._parameter_shorthand_flag_operation,
           $._parameter_presence_operation,
           $._parameter_operation,
+          $._operator_started_parameter_default,
           $._parameter_body,
         ),
         '}',
-      ),
+      )),
     ),
 
     _parameter_body: $ => seq(
@@ -887,6 +888,8 @@ module.exports = grammar({
       repeat($._parameter_part),
     ),
 
+    _operator_started_parameter_default: $ => alias($._operator_started_parameter_default_word, $.word),
+
     _parameter_removal: $ => seq(
       alias($._parameter_removal_operator, $.parameter_operator),
       repeat(choice(alias($._parameter_removal_part, $.word), $._parameter_part)),
@@ -908,7 +911,7 @@ module.exports = grammar({
       optional(seq(':', optional(alias($._parameter_slice_part, $.word)))),
     )),
 
-    parameter_operator: _ => token.immediate(choice('::=', ':^^', ':-', ':=', ':?', ':+', ':#', ':|', ':*', ':^', '-', '=', '?', '+')),
+    parameter_operator: _ => token.immediate(prec(3, choice('::=', ':^^', ':-', ':=', ':?', ':+', ':#', ':|', ':*', ':^', '-', '=', '?', '+'))),
 
     _parameter_presence_operator: _ => token.immediate('+'),
 
@@ -928,9 +931,11 @@ module.exports = grammar({
       $.arithmetic_expansion,
     ),
 
-    _parameter_substitution_part: _ => token.immediate(/[^/}\s'"`$\\;|&<>(){}=>]+/),
+    _parameter_substitution_part: _ => token.immediate(/[^/}\s'"`$\\;|&<>{}=>]+/),
 
     _parameter_substitution_glob_flag: _ => token.immediate(prec(2, /\(#[A-Za-z]+\)/)),
+
+    _operator_started_parameter_default_word: _ => token.immediate(prec(4, /(?:::=|:\^\^|:[-=?:+#|*^])[^}\s'"`$\\;|&<>(){}=>]+/)),
 
     _parameter_slice_part: _ => token.immediate(/[^:}\s'"`$\\;|&<>(){}=>]+/),
 
