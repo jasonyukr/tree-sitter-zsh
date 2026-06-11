@@ -882,7 +882,7 @@
     "named": true,
     "fields": {
       "variable": {
-        "multiple": false,
+        "multiple": true,
         "required": true,
         "types": [
           {
@@ -1203,6 +1203,10 @@
         },
         {
           "type": "command_substitution",
+          "named": true
+        },
+        {
+          "type": "double_quoted_string",
           "named": true
         },
         {

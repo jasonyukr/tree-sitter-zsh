@@ -15,10 +15,16 @@ const PREC = {
 
 const REDIRECT_OPERATORS = [
   '<<<',
+  '&>>|',
+  '&>>!',
   '&>>',
+  '>>&|',
+  '>>&!',
+  '>>&',
   '>>|',
   '>>!',
   '>&|',
+  '>&!',
   '<&-',
   '>&-',
   '<<-',
@@ -28,6 +34,8 @@ const REDIRECT_OPERATORS = [
   '<>',
   '>&',
   '<&',
+  '&>|',
+  '&>!',
   '&>',
   '<<',
   '<',
@@ -54,10 +62,8 @@ module.exports = grammar({
   conflicts: $ => [
     [$.simple_command],
     [$.simple_command, $._heredoc_simple_command],
-    [$.command_name, $.foreach_statement],
     [$.command_substitution, $._statement],
     [$._parameter_body, $._parameter_operation],
-    [$.function_definition, $._redirected_command],
     [$.command_name, $._command_part],
   ],
 
@@ -532,10 +538,34 @@ module.exports = grammar({
       seq(
         'foreach',
         field('variable', $.variable_name),
-        optional(seq('(', repeat($._word), ')')),
+        repeat1(field('variable', $.variable_name)),
+        seq('(', repeat($._word), ')'),
+        optional($._terminator),
+        repeat($.terminated_statement),
+        'end',
+      ),
+      seq(
+        'foreach',
+        field('variable', $.variable_name),
+        seq('(', repeat($._word), ')'),
         optional($._terminator),
         repeat($._statement),
         'end',
+      ),
+      seq(
+        'foreach',
+        field('variable', $.variable_name),
+        $._terminator,
+        repeat($._statement),
+        'end',
+      ),
+      seq(
+        'foreach',
+        field('variable', $.variable_name),
+        repeat1(field('variable', $.variable_name)),
+        seq('(', repeat($._word), ')'),
+        optional($._terminator),
+        $.block,
       ),
       seq(
         'foreach',
@@ -831,6 +861,7 @@ module.exports = grammar({
           $._parameter_operation,
           $._parameter_default,
           $._parameter_body,
+          $.double_quoted_string,
         ),
         '}',
       )),
@@ -1056,6 +1087,7 @@ module.exports = grammar({
     _job_terminator: $ => choice(
       alias('&', $.list_operator),
       alias('&!', $.list_operator),
+      alias('&|', $.list_operator),
     ),
 
     bang: _ => token(prec(4, '!')),

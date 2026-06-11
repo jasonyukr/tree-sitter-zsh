@@ -564,6 +564,9 @@ Nested parameter sample coverage
 ==================
 
 print ${(*)sample/(#b)*(pat)*/${match[1]}}
+print ${${foo#head}%tail}
+print ${(f)"$(foo)"}
+print ${(-)numbers}
 print ${${:-fallback}:l} ${${:-fallback}:u} ${${:-fallback}:C}
 print ${${(%):-%N}:A:h}
 print ${path:A:h}
@@ -588,6 +591,43 @@ print ${var//(#m)[[:alpha:]]/${MATCH:l}}
               (parameter_expansion
                 (variable_name)
                 (parameter_subscript))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            parameter: (parameter_expansion
+              parameter: (variable_name)
+              (parameter_operator)
+              (word))
+            (parameter_operator)
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            (parameter_flags)
+            (double_quoted_string
+              (command_substitution
+                (list
+                  (pipeline
+                    (simple_command
+                      (command_name
+                        (word))))))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (simple_command
+          (command_name
+            (word))
+          (parameter_expansion
+            (parameter_flags)
+            (variable_name))))))
   (terminated_statement
     (list
       (pipeline
