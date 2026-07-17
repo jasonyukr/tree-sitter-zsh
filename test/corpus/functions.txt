@@ -370,3 +370,68 @@ function -- -T { print hi }
                   (command_name
                     (word))
                   (word))))))))))
+
+==================
+Function header terminators
+==================
+
+function brace; { print brace }
+function subshell
+( print subshell )
+function short; print short
+posix()
+{ print posix }
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          name: (command_name
+            (word))
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          name: (command_name
+            (word))
+          (subshell
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          name: (command_name
+            (word))
+          (simple_command
+            (command_name
+              (word))
+            (word))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (function_definition
+          name: (command_name
+            (word))
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word))))))))))

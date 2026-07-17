@@ -1180,6 +1180,74 @@ case $x { (foo) print ok ;; }
                   (word))))))))))
 
 ==================
+Always statement terminators
+==================
+
+{ print try } always; { print always }
+{ print try } always
+{ print always }
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (always_statement
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))))))
+  (terminated_statement
+    (list
+      (pipeline
+        (always_statement
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word)))))
+          (block
+            (list
+              (pipeline
+                (simple_command
+                  (command_name
+                    (word))
+                  (word))))))))))
+
+==================
+Conditional -N operator
+==================
+
+[[ -N file ]]
+
+---
+
+(source_file
+  (terminated_statement)
+  (terminated_statement
+    (list
+      (pipeline
+        (conditional_command
+          (conditional_expression
+            (test_unary_expression
+              (test_operator)
+              (word))))))))
+
+==================
 Alternate brace branches
 ==================
 
